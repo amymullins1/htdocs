@@ -1,0 +1,14 @@
+
+Hope you enjoy your new logo, here are the people that
+made your beautiful logo happen :)
+font name: IBMPlexMono-Light
+font link: https://fonts.google.com/specimen/IBM+Plex+Mono
+font author: Mike Abbink
+font author site: https://www.mikeabbink.com/
+
+
+icon designer: WEBTECHOPS LLP
+icon designer link: /creativepriyanka
+        
+{"bg":"#EDF2F3","icon-gradient-0":"#20484F","icon-gradient-1":"#4E9BAB","font":"#12262A","slogan":"#263a3e"}
+      
