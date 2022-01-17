@@ -31,7 +31,7 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
             $_SESSION['error']="Email already exists!";
          
         }elseif($stmt = $con->prepare('INSERT INTO accounts(Username, Pwd, Fname, Lname, Email, DOB) VALUES (?, ?, ?, ?, ?, ?)')) {
-        // Bind parameters (s = string, i = int, b = blob, etc), in our case the username is a string so we use "s"
+       
         $stmt->bind_param('ssssss', $_POST['username'], $hashedPassword, $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['dob']);
         $stmt->execute();
         //Get the user id of the account that has just been created, in order to add records to other tables

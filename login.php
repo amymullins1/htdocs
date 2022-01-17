@@ -24,10 +24,8 @@ if ($stmt = $con->prepare('SELECT UserId, Pwd, Fname, Lname, Email, DOB FROM acc
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($uid, $password, $fname, $lname, $email, $dob);
         $stmt->fetch();
-        // Account exists, now we verify the password.
-        // Note: remember to use password_hash in your registration file to store the hashed passwords.
         if (password_verify($_POST['password'], $password)) {
-            // Verification success! User has logged-in!
+            // User has logged-in successfully.
             // Create sessions, so we know the user is logged in, they basically act like cookies but remember the data on the server.
             session_regenerate_id();
             $_SESSION['loggedin'] = TRUE;

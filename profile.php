@@ -54,13 +54,18 @@ if(isset($_POST['submit'])){
                 $stmt->bind_result($emailNum, $score, $outof);
                 $stmt->fetch();
                 
-                if($emailNum !=0){
-                    echo "<h2>Simulation in progress...</h2>";
+                if($emailNum ==5){
+                    echo "Simulation finished!";
                     echo "<h2>Score: $score/$outof</h2>";
+                    echo "<h2>Feedback: </h2>";
                 }
-                else{
+                elseif($emailNum == 0){
                     echo "<h2>You have not begun your Simulation yet! Start now?</h2>";
                     echo "<form action='' method='post'><input type='submit' value='Start!' name='submit'></form>";
+                }
+                else{
+                    echo "<h2>Simulation in progress...</h2>";
+                    echo "<h2>Score: $score/$outof</h2>";
                 }
                 
             }
