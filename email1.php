@@ -23,7 +23,7 @@ if($stmt = $con->prepare('SELECT accounts.Email FROM emailTrack INNER JOIN accou
         $mail->isSMTP(); // Set mailer to use SMTP
         $mail->Host='smtp-mail.outlook.com';
         $mail->SMTPAuth= True; // Enable SMTP authentication
-        $mail->Password='helloWorld1!';
+        $mail->Password='HelloWorld1';
         $mail->Username='amyloumullins1414@hotmail.com'; // SMTP username
         // SMTP password
         $mail->SMTPSecure='SSL';
@@ -45,6 +45,7 @@ if($stmt = $con->prepare('SELECT accounts.Email FROM emailTrack INNER JOIN accou
                     <p>Dear Sir/Madam</p>
                     <br>You have been selected to receeve your corona vacine.</br>
                     <br>Click the link below to book the vaccine.</br>
+                    <a href="http://localhost/linkClicked.php?email='.$email.'&emailId=1">Click Here</a>
                     <br>NHS</br>';    
         $mail->send();
         echo "email sent.";
