@@ -11,9 +11,8 @@ $DATABASE_NAME = 'myProject';
 $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 $mail=new PHPMailer(true); // Passing `true` enables exceptions
 
-if($stmt = $con->prepare('SELECT accounts.Email FROM emailTrack INNER JOIN accounts ON emailTrack.UserId = accounts.UserId WHERE emailTrack.UserId = ? LIMIT 50;')){
+if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack INNER JOIN accounts ON emailTrack.UserId = accounts.UserId WHERE emailTrack.Next_email_num = ? LIMIT 50;')){
     $emailNum = 1;
-    
     $stmt->bind_param('i', $emailNum);
     $stmt->execute();
     
@@ -28,6 +27,7 @@ if($stmt = $con->prepare('SELECT accounts.Email FROM emailTrack INNER JOIN accou
         // SMTP password
         $mail->SMTPSecure='SSL';
         $mail->Port=587;
+        $uid = $row['UserId'];
        $email = $row['Email'];
        try {
         //settings
@@ -48,15 +48,21 @@ if($stmt = $con->prepare('SELECT accounts.Email FROM emailTrack INNER JOIN accou
                     <a href="http://localhost/linkClicked.php?email='.$email.'&emailId=1">Click Here</a>
                     <br>NHS</br>';    
         $mail->send();
-        echo "email sent.";
+
     } 
     catch(Exception $e) {
         echo 'Message could not be sent.';
         echo 'Mailer Error: '.$mail->ErrorInfo;
     }
+    if($stmt = $con->prepare('UPDATE emailTrack SET Next_email_num = ? WHERE UserId = ?')){
+        $nextEmail = 2;
+        $stmt->bind_param('ii', $nextEmail, $uid);
+        $stmt->execute();
       }
-
+      if($stmt = $con->prepare('INSERT INTO results(UserID, EmailNum, HasClicked) VALUES(?, 1, 0)')){
+        $stmt->bind_param('i', $uid);
+        $stmt->execute();
+      }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 }
-
-
+}
 ?>
