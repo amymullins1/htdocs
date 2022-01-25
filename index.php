@@ -13,10 +13,11 @@ session_start();
     <?php if(!isset($_SESSION['loggedin'])){
                         echo '<ul>
                         <a href="login.php">Login</a>
+                        <a href="signUp.php">Sign Up</a>
                     </ul>';
             }else{
                 $name = $_SESSION['fname'];
-                echo "<ul><span class='welcome'>Welcome, $name!</span><a href='logOut.php'>Log Out</a></ul>";           
+                echo "<ul><a href='profile.php'><span class='welcome'>Welcome, $name!</span></a><a href='logOut.php'>Log Out</a></ul>";           
             }
     ?>
     

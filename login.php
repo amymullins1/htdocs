@@ -2,26 +2,25 @@
 session_start();
 include('config.php');
 unset($_SESSION['error']);
-if(isset($_POST['login'])){
-// Change this to your connection info.
 $DATABASE_HOST = 'localhost';
 $DATABASE_USER = 'root';
 $DATABASE_PASS = '';
 $DATABASE_NAME = 'myProject';
-// Try and connect using the info above.
+// Try and connect using the information above.
 $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 if ( mysqli_connect_errno() ) {
 	// If there is an error with the connection, stop the script and display the error.
 	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
-
-if ($stmt = $con->prepare('SELECT UserId, Pwd, Fname, Lname, Email, DOB FROM accounts WHERE Username = ?')) {
-	// Bind parameters (s = string, i = int, b = blob, etc), in our case the username is a string so we use "s"
-	$stmt->bind_param('s', $_POST['username']);
-	$stmt->execute();
+if(isset($_POST['login'])){ //if the login button is clicked
+    $uname = $_POST['username'];
+if($stmt = $con->prepare('SELECT UserId, Pwd, Fname, Lname, Email, DOB FROM accounts WHERE Username = ?')) {
+	$stmt->bind_param('s', $uname);
+    $stmt->execute();
+    $stmt->store_result();
 	// Store the result so we can check if the account exists in the database.
-	$stmt->store_result();
     if ($stmt->num_rows > 0) {
+        echo "done";
         $stmt->bind_result($uid, $password, $fname, $lname, $email, $dob);
         $stmt->fetch();
         if (password_verify($_POST['password'], $password)) {
