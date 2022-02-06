@@ -29,6 +29,7 @@ if($stmt = $con->prepare('SELECT UserId, Pwd, Fname, Lname, Email, DOB FROM acco
             session_regenerate_id();
             $_SESSION['loggedin'] = TRUE;
             $_SESSION['uid'] = $uid;
+            $_SESSION['uname']= $uname;
             $_SESSION['fname'] = $fname;
             $_SESSION['lname'] = $lname;
             $_SESSION['email'] = $email;

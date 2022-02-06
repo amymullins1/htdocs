@@ -15,6 +15,7 @@ html, body{
     background-blend-mode: multiply;
     margin:0;
     padding-bottom: 2px;
+   
 
 }
 .bannerHeader a{
@@ -89,6 +90,7 @@ html, body{
     font-weight: 800;
     color: #4f7378;
 }
+
 .body{
     padding-top: 10px;
     background-color: #31565e;
@@ -124,4 +126,12 @@ html, body{
     background-size: cover;
     background-blend-mode: multiply;
     padding-bottom: 20px;
+}
+.font span{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 25px;
+        font-weight: 600;
+        padding-left: 20px;
+        color: #edf2f3;
+    
 }
