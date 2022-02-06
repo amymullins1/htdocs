@@ -12,7 +12,7 @@ $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_
 $mail=new PHPMailer(true); // Passing `true` enables exceptions
 
 if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack INNER JOIN accounts ON emailTrack.UserId = accounts.UserId WHERE emailTrack.Next_email_num = ? LIMIT 50;')){
-    $emailNum = 3;
+    $emailNum = 4;
     $stmt->bind_param('i', $emailNum);
     $stmt->execute();
     
@@ -32,19 +32,22 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
        try {
         //settings
     
-        $mail->setFrom('amyloumullins1414@hotmail.com', 'WINNER');
+        $mail->setFrom('amyloumullins1414@hotmail.com', 'Microsoft');
     
         //recipient
         $mail->addAddress($email);     // Add a recipient
     
         //content
         $mail->isHTML(true); // Set email format to HTML
-        $mail->Subject='CONGRATULATIONS!';
+        $mail->Subject='YOU MUST ACT NOW';
       
-        $mail->Body='<p style="color: red;font-weight:bolder;">EXCLUSIVE</p>
-                    <br><p style="color: red; font-weight:bolder;">YOU HAVE BEEN CHOSAN TO WIN $1000</p>
-                    <br><p style="color:red;font-weight:bolder;">CLICK THE LINK BELOW TO CLAIM</p><br>
-                    <a style="color: red;font-weight:bolder;" href="http://localhost/linkClicked.php?email='.$email.'&emailId=3">CLICK ME</a>';
+        $mail->Body='Hi '.$email.'<br>
+                    <p>YOUR MICROSOFT ACCOUNT HAS BEEN HACKED</p>
+                    <br><p>YOU MUST LOG IN NOW TO SAVE YOUR ACCOUNT BEFOR ITS TOO LAIT!</p>
+                    <a href="http://localhost/linkClicked.php?email='.$email.'&emailId=4">LOG IN</a>
+                    <br><p>Microsoft</p>
+                    <img width="190" height = "100" src="http://localhost/Logo/microsoft_logo.png">
+                    ';
                        
         $mail->send();
 
@@ -54,11 +57,11 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         echo 'Mailer Error: '.$mail->ErrorInfo;
     }
     if($stmt = $con->prepare('UPDATE emailTrack SET Next_email_num = ? WHERE UserId = ?')){
-        $nextEmail = 4;
+        $nextEmail = 5;
         $stmt->bind_param('ii', $nextEmail, $uid);
         $stmt->execute();
       }
-      if($stmt = $con->prepare('INSERT INTO results(UserID, EmailNum, HasClicked) VALUES(?, 3, 0)')){
+      if($stmt = $con->prepare('INSERT INTO results(UserID, EmailNum, HasClicked) VALUES(?, 4, 0)')){
         $stmt->bind_param('i', $uid);
         $stmt->execute();
       }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             

@@ -136,7 +136,7 @@ echo "<h1><p class = 'menuHeader1'>Welcome Back, $name!</p></h1></header>";
   $stmt->store_result();
   $stmt->bind_result($emailNum);
   $stmt->fetch();
-  if($emailNum ==5): ?>
+  if($emailNum ==6): ?>
 <button class="tablinks" onclick="tabEvent(event, 'Feedback')">Feedback</button>
   <?php endif;?>
   
@@ -207,7 +207,7 @@ $stmt->store_result();
 $stmt->bind_result($emailNum, $score);
 $stmt->fetch();
 
-if($emailNum ==5){
+if($emailNum ==6){
     echo "<h2>Simulation finished!</h2>";
     echo "<h3>Results:</h3>";
     echo "<p>You scored: $score/5!</p>";
@@ -220,7 +220,7 @@ if($emailNum ==5){
     while($rowData = $results->fetch_assoc()){
         if($rowData['EmailNum']==1){
             ?>
-            <li style="margin-left: 50px;">NHS COVID Vaccination email</li>
+            <li style="margin-left: 50px;">NHS COVID vaccination email</li>
             <?php
         }elseif($rowData['EmailNum']==2){
             ?>
@@ -228,15 +228,15 @@ if($emailNum ==5){
             <?php
         }elseif($rowData['EmailNum']==3){
             ?>
-            <li style="margin-left: 50px;">Email 3</li>
+            <li style="margin-left: 50px;">Chosen to win $1000 email</li>
             <?php
         }elseif($rowData['EmailNum']==4){
             ?>
-            <li style="margin-left:50px;">Email 4</li>
+            <li style="margin-left:50px;">Microsoft account hacked email</li>
             <?php
         }elseif($rowData['EmailNum']==5){
             ?>
-            <li style="margin-left:50px;">Email 5</li>
+            <li style="margin-left:50px;">Netflix payment failed email</li>
             <?php
         }
     }
@@ -332,7 +332,7 @@ $stmt=$con->prepare('SELECT EmailNum from results where UserId = ? and HasClicke
             }
             ?>
             <span style="margin-left: 30px; font-size: 22px; font-weight: bolder;">Double check the URLs</span>
-            <br> <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px;">URLs can be easily masked to say they are directing you to a legitimate place, when in reality they are not. The link may be masked to say “sign in to your Apple account” or it may be made a little more difficult by being masked to a legitimate website link. In the xxx simulation email, you clicked on a masked link, which you may have thought was taking you to the iCloud sign in page but in fact it was not. To check the real identity of the link, hover over the URL in the email and the actual link will be shown to you. </span><br><br>
+            <br> <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px;">URLs can be easily masked to say they are directing you to a legitimate place, when in reality they are not. The link may be masked to say “sign in to your Apple account” or it may be made a little more difficult by being masked to a legitimate website link. In the Netflix simulation email, you clicked on a masked link, which you may have thought was taking you to your Netflix billing information page but in fact it was not. To check the real identity of the link, hover over the URL in the email and the actual link will be shown to you. </span><br><br>
 <?php
         }
     }
