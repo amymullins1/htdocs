@@ -27,6 +27,11 @@ if ($stmt = $con->prepare('SELECT UserId FROM accounts WHERE Email = ?')) {
             $stmt->bind_param('ss', $uid, $emailID); 
             $stmt->execute();
         }
+        if($stmt = $con->prepare('UPDATE emailTrack set Score = Score - 1 where UserId = ? and Score>0')){
+            //updates the user's score in emailTrack. WHERE Score>0 is used to ensure the score never goes below 0, since there should be no negative scores.
+            $stmt->bind_param('s', $uid); 
+            $stmt->execute();
+        }
     }
 }
 ?>

@@ -45,7 +45,7 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
         //Add a record to the emailTrack table
         if($stmt = $con->prepare('INSERT INTO emailTrack(UserId, Next_email_num, Score) VALUES (?, ?, ?)')){
         $next_email = 0;
-        $Score = 0;
+        $Score = 5;
         $stmt->bind_param('iii', $uid, $next_email, $Score);
         $stmt->execute();
         }

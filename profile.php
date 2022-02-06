@@ -200,17 +200,17 @@ $dob = $_SESSION['dob'];
     }
     </style>
 <?php 
-$stmt = $con->prepare('SELECT Next_email_num, Score, ScoreOutOf from emailTrack WHERE UserId = ?');
+$stmt = $con->prepare('SELECT Next_email_num, Score from emailTrack WHERE UserId = ?');
 $stmt->bind_param('i', $uid);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($emailNum, $score, $outof);
+$stmt->bind_result($emailNum, $score);
 $stmt->fetch();
 
 if($emailNum ==5){
     echo "<h2>Simulation finished!</h2>";
     echo "<h3>Results:</h3>";
-    echo "<p>Score: $score/$outof</p>";
+    echo "<p>You scored: $score/5!</p>";
     $stmt=$con->prepare('SELECT EmailNum from results where UserId = ? and HasClicked = 1;');
     $stmt->bind_param('i', $uid);
     $stmt->execute();
@@ -219,13 +219,25 @@ if($emailNum ==5){
       echo "<p>You clicked the link in the following simulation emails:</p>";
     while($rowData = $results->fetch_assoc()){
         if($rowData['EmailNum']==1){
-            echo "<li>NHS COVID Vaccination email</li>";
+            ?>
+            <li style="margin-left: 50px;">NHS COVID Vaccination email</li>
+            <?php
         }elseif($rowData['EmailNum']==2){
-            echo "<li>PayPal account locked email</li>";
+            ?>
+            <li style="margin-left: 50px;">PayPal account locked email</li>
+            <?php
         }elseif($rowData['EmailNum']==3){
-            echo "<li>Email 3</li>";
+            ?>
+            <li style="margin-left: 50px;">Email 3</li>
+            <?php
         }elseif($rowData['EmailNum']==4){
-            echo "<li>Email 4</li>";
+            ?>
+            <li style="margin-left:50px;">Email 4</li>
+            <?php
+        }elseif($rowData['EmailNum']==5){
+            ?>
+            <li style="margin-left:50px;">Email 5</li>
+            <?php
         }
     }
 }
