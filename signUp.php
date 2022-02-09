@@ -30,9 +30,9 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
         if($stmt->num_rows>0){
             $_SESSION['error']="Email already exists!";
          
-        }elseif($stmt = $con->prepare('INSERT INTO accounts(Username, Pwd, Fname, Lname, Email, DOB) VALUES (?, ?, ?, ?, ?, ?)')) {
+        }elseif($stmt = $con->prepare('INSERT INTO accounts(Username, Pwd, Fname, Lname, Email, DOB, lastActive) VALUES (?, ?, ?, ?, ?, ?, ?)')) {
        
-        $stmt->bind_param('ssssss', $_POST['username'], $hashedPassword, $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['dob']);
+        $stmt->bind_param('sssssss', $_POST['username'], $hashedPassword, $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['dob'], date("d-m-y"));
         $stmt->execute();
         //Get the user id of the account that has just been created, in order to add records to other tables
         if($stmt = $con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){

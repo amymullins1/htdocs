@@ -257,6 +257,17 @@ echo "<h1><p class = 'menuHeader1'>Welcome Back, $name!</p></h1></header>";  //w
 <div class="tab">
   <button class="tabClass" onclick="tabEvent(event, 'Profile')" id="defaultTab">Account</button>
   <button class="tabClass" onclick="tabEvent(event, 'Edit')">Edit Account</button>
+  <?php
+   $stmt=$con->prepare('Select * from pastScores where UserId = ?;');
+   $stmt->bind_param('s', $uid);
+   $stmt->execute();
+   $stmt->store_result();
+   
+   if($stmt->num_rows>0){
+       ?><button class="tabClass" onclick="tabEvent(event, 'Scores')">Your Scores</button> <?php
+   }
+ 
+  ?>
   <button class="tabClass" onclick="tabEvent(event, 'Simulation')">Simulation</button>
  
  <?php
@@ -269,7 +280,9 @@ echo "<h1><p class = 'menuHeader1'>Welcome Back, $name!</p></h1></header>";  //w
   //the 'feedback' tab is only displayed if the user has finished simulation.
   if($emailNum ==6): ?>
 <button class="tabClass" onclick="tabEvent(event, 'Feedback')">Feedback</button>
-  <?php endif;?>
+  <?php endif;
+
+  ?>
 
 </div>
 
@@ -559,6 +572,27 @@ $stmt=$con->prepare('SELECT EmailNum from results where UserId = ? and HasClicke
     }
 }
 ?>
+</div>
+<div id="Scores" class="insideTab">
+    <h3>Your Past Simulation Scores:</h3>
+    <table style="background-color: #edf2f3; text-align: center; border: 2px solid white; width: 25%; height: 20%;"><tr style="font-size: 20px;">
+        <th style="border: 2px solid white; background-color: rgba(65, 135, 148, .5);">Score</th>
+        <th style="border: 2px solid white; background-color: rgba(65, 135, 148, .5);">Date</th>
+</tr>
+<?php
+    $stmt=$con->prepare('Select Score, SavedDate from pastScores where UserId = ?');
+    $stmt->bind_param('s', $uid);
+    $stmt->execute();
+    $results = $stmt->get_result();
+    while($rowData = $results->fetch_assoc()){
+        echo "<tr>";
+        echo "<td style='border: 2px solid white; background-color: rgba(65, 135, 148, .5); '>".$rowData['Score']."/5</td>";
+        echo "<td style='border: 2px solid white; background-color: rgba(65, 135, 148, .5);'>".$rowData['SavedDate']."/5</td>";
+        echo "</tr>";
+    }  
+
+?>
+</table>
 </div>
 <script>
 function tabEvent(evt, eventName) {

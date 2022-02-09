@@ -35,6 +35,9 @@ if($stmt = $con->prepare('SELECT UserId, Pwd, Fname, Lname, Email, DOB FROM acco
             $_SESSION['email'] = $email;
             $_SESSION['dob'] = $dob;
             $_SESSION['id'] = $id;
+            $stmt=$con->prepare('Update accounts set lastActive = ? where UserId = ?');
+            $stmt->bind_param('ss', date("d-m-y"), $uid);
+            $stmt->execute();
             header("Location: profile.php");
             
         } else {
