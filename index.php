@@ -3,6 +3,32 @@ session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+    <?php if(isset($_SESSION['loggedin'])){ 
+        ?>
+<script type="text/javascript">
+        var secsCounter = 0;
+        var timer = null;
+        var timeOutSecs = 10; //10 seconds
+        
+        //if the mouse is moved, clicked or a key is pressed, the counter is set back to 0
+        document.onclick = function () { secsCounter = 0; };
+        document.onmousemove = function () { secsCounter = 0; };
+        document.onkeypress = function () { secsCounter = 0; };
+
+        //calls the checkCount() function at 1 second intervals
+        timer = window.setInterval(checkCount, 1000);
+        
+        function checkCount() {
+            secsCounter++;
+            //if the seconds counter is greater or equal to the timeout seconds, alert the user that the session has timed out and redirect.
+            if (secsCounter >= timeOutSecs) {
+                window.clearInterval(timer);
+                alert('Session Timed Out!\n Please Log In');
+                window.location = "logOut.php";
+            }
+        }
+    </script>
+    <?php }?>
 <head>
     <meta charset="UTF-8"/>
     <title>TechKnow | Home</title>
@@ -15,10 +41,14 @@ session_start();
                         <a href="login.php">Login</a>
                         <a href="signUp.php">Sign Up</a>
                     </ul>';
+                    ?>
+                    
+                    <?php
             }else{
                 $name = $_SESSION['fname'];
                 echo "<ul><a href='profile.php'><span class='welcome'>Welcome, $name!</span></a><a href='logOut.php'>Log Out</a></ul>";           
             }
+            
     ?>
     
 </header>
@@ -26,11 +56,10 @@ session_start();
         <nav>
             <ul>
             <div id = "menu" class="menu">
-                <div id="logo" class="logoImage"><li><a href="homepage.html" ><img class="logoImage" src="Logo/horizontalCover.png"></a></li></div>
+                <div id="logo" class="logoImage"><li><a href="index.php" ><img class="logoImage" src="Logo/horizontalCover.png"></a></li></div>
                 <div class="menuText">
-                    <li><a href="homepage.html">HOME</a></li>
+                    <li><a href="index.php">HOME</a></li>
                 <li><a href="about.php">ABOUT</a></li>
-                <li><a href="modules.html">MODULES</a></li>
                 </div>
             </div>
             </ul>

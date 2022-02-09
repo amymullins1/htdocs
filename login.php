@@ -51,12 +51,27 @@ if($stmt = $con->prepare('SELECT UserId, Pwd, Fname, Lname, Email, DOB FROM acco
 ?>
 
 <link rel="stylesheet" href="login.css">
+<link rel="stylesheet" href="homepage.css">
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Login</title>
-	</head>
+		<title>TechKnow | Login</title>
+    </head>
+    <header class="mainHeader" style="margin: 0px;">
+        <nav>
+            <ul>
+            <div id = "menu" class="menu">
+                <div id="logo" class="logoImage"><li><a href="index.php" ><img class="logoImage" src="Logo/horizontalCover.png"></a></li></div>
+                <div class="menuText">
+                    <li><a href="index.php">HOME</a></li>
+                <li><a href="about.php">ABOUT</a></li>
+                <li><a href="signUp.php">SIGN UP</a></li>
+                </div>
+            </div>
+            </ul>
+        </nav>
+</header>
 	<body>
 		<div class="box">
 			<form class="loginForm" action="" method="post">

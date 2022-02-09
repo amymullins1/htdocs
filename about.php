@@ -1,7 +1,7 @@
 <?php
 session_start();
 ?>
- <link rel="stylesheet" href="about.css"/>
+ <link rel="stylesheet" href="homepage.css"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,11 +39,11 @@ session_start();
     <h1 class="menuHeader1">Your Phishing Education, Right Away!</h1>
 </header>
 <div id="body" class="body">
-<div class="header"><h2>What We Do </h2></div>
+<div class="header"><h2 style="color: white;">What We Do </h2></div>
 <div class = "text">
 <p >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam adipiscing vitae proin sagittis. Sagittis orci a scelerisque purus semper. Ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt. Elit duis tristique sollicitudin nibh sit amet commodo. In hac habitasse platea dictumst. Eu ultrices vitae auctor eu augue. Tempus egestas sed sed risus pretium quam vulputate. Est lorem ipsum dolor sit amet consectetur. Congue mauris rhoncus aenean vel elit scelerisque mauris pellentesque pulvinar. Volutpat consequat mauris nunc congue nisi vitae. Eget lorem dolor sed viverra ipsum. Eu consequat ac felis donec. A diam maecenas sed enim ut.</p>
 </div>
-    <div class="header"><h2>Benefits</h2></div>
+    <div class="header"><h2 style="color: white;">Benefits</h2></div>
     <div class = "text">
         <p >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quam adipiscing vitae proin sagittis. Sagittis orci a scelerisque purus semper. Ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt. Elit duis tristique sollicitudin nibh sit amet commodo. In hac habitasse platea dictumst. Eu ultrices vitae auctor eu augue. Tempus egestas sed sed risus pretium quam vulputate. Est lorem ipsum dolor sit amet consectetur. Congue mauris rhoncus aenean vel elit scelerisque mauris pellentesque pulvinar. Volutpat consequat mauris nunc congue nisi vitae. Eget lorem dolor sed viverra ipsum. Eu consequat ac felis donec. A diam maecenas sed enim ut.</p>
     </div>

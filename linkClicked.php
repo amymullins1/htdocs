@@ -35,17 +35,30 @@ if ($stmt = $con->prepare('SELECT UserId FROM accounts WHERE Email = ?')) {
     }
 }
 ?>
-<link rel="stylesheet" href="linkClicked.css">
+<link rel="stylesheet" href="homepage.css">
 <!DOCTYPE html>
-<html> 
+<html style="background-color: #edf2f3; margin:0px;"> 
 <head><meta charset="utf-8"><title>Phishing Email!</title></head>
-<body>
-<h1>Oops!</h1>
+<header class="mainHeader" style="margin: 0px;">
+        <nav>
+            <ul>
+            <div id = "menu" class="menu">
+                <div id="logo" class="logoImage"><li><a href="index.php" ><img class="logoImage" src="Logo/horizontalCover.png"></a></li></div>
+                <div class="menuText">
+                    <li><a href="index.php">HOME</a></li>
+                <li><a href="login.php">LOG IN</a></li>
+                </div>
+            </div>
+            </ul>
+        </nav>
+</header>
+<body style="background-color: red; margin: 5px;">
+<h1 style="text-align: center; font-size: 40px;">Oops!</h1>
 <h2>You clicked on a simulated phishing email!</h2>
 <h3>Please read the guidance below in order to avoid being fooled by phishing scams:<h3>
-<p class="tab">1. Check for spelling mistakes</p>
-<p class="tab">2. Check how you have been addressed in the email. If general terms, such as 'customer' or 'sir/madam' have been used, it is likely to be a scam.</p>
-<p class="tab">3. Ensure the sender email address is a legit email. If the email address is masked by a name, click on the name in order to view the actual email address.</p>
+<p class="tabAcross">1. Check for spelling mistakes</p>
+<p class="tabAcross">2. Check how you have been addressed in the email. If general terms, such as 'customer' or 'sir/madam' have been used, it is likely to be a scam.</p>
+<p class="tabAcross">3. Ensure the sender email address is a legit email. If the email address is masked by a name, click on the name in order to view the actual email address.</p>
 
 </body>
 </html>
