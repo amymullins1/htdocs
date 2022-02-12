@@ -44,7 +44,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $mail->Body='<p style="color: red;font-weight:bolder;">EXCLUSIVE</p>
                     <br><h1 style="color: red; font-weight:bolder;">YOU HAVE BEEN CHOSAN TO WIN $1000</h1>
                     <p style="color:red;font-weight:bolder;">CLICK THE LINK BELOW TO CLAIM</p><br>
-                    <a style="color: red;font-weight:bolder;" href="http://localhost/linkClicked.php?email='.$email.'&emailId=3">CLICK ME</a>';
+                    <a style="color: red;font-weight:bolder;" href="http://localhost/linkClicked.php?email='.htmlspecialchars($email).'&emailId=3">CLICK ME</a>';
                        
         $mail->send();
 

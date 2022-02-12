@@ -17,8 +17,9 @@ session_start();
                     </ul>';
             }else{
                 $name = $_SESSION['fname'];
-                echo "<ul><span class='welcome'>$name</span><a href='logOut.php'>Log Out</a></ul>";
-                    
+                ?>
+                <ul><a class='welcome' href="profile.php">Welcome, <?php echo htmlspecialchars($name); ?></span><a href='logOut.php'>Log Out</a></ul>";
+               <?php     
             }
     ?>
 </header>

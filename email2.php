@@ -45,7 +45,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
                     <p>Dear Customer</p>
                     <br>Your PayPal account has been limited due to susspected susspicious activty </br>
                     <br>Sign into yore acount to unlock the acount</br>
-                    <a href="http://localhost/linkClicked.php?email='.$email.'&emailId=2">Log In</a>
+                    <a href="http://localhost/linkClicked.php?email='.htmlspecialchars($email).'&emailId=2">Log In</a>
                     <br>PayPal</br>';    
         $mail->send();
 

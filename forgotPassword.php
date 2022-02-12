@@ -44,7 +44,7 @@ if($stmt = $con->prepare('SELECT Fname FROM accounts WHERE Email = ?')) {
         $mail->Subject='Password Reset';
       
         $mail->Body='<p>Dear '.$name.', </p><br><p>Please click the link below to reset your password: </p><br>
-        <a href="http://localhost/resetPass.php?email='.$email.'">Reset Password</a><br><p>The TechKNOW Team</p>';
+        <a href="http://localhost/resetPass.php?email='.htmlspecialchars($email).'">Reset Password</a><br><p>The TechKNOW Team</p>';
              
         $mail->send();
     }else{

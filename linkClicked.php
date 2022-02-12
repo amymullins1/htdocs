@@ -52,7 +52,7 @@ if ($stmt = $con->prepare('SELECT UserId FROM accounts WHERE Email = ?')) {
             </ul>
         </nav>
 </header>
-<body style="background-color: red; margin: 5px;">
+<body style="background-color: rgba(255, 0, 0, .65); margin: 5px;">
 <h1 style="text-align: center; font-size: 40px;">Oops!</h1>
 <h2>You clicked on a simulated phishing email!</h2>
 <h3>Please read the guidance below in order to avoid being fooled by phishing scams:<h3>

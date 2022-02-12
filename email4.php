@@ -44,7 +44,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $mail->Body='Hi '.$email.'<br>
                     <p>YOUR MICROSOFT ACCOUNT HAS BEEN HACKED</p>
                     <br><p>YOU MUST LOG IN NOW TO SAVE YOUR ACCOUNT BEFOR ITS TOO LAIT!</p>
-                    <a href="http://localhost/linkClicked.php?email='.$email.'&emailId=4">LOG IN</a>
+                    <a href="http://localhost/linkClicked.php?email='.htmlspecialchars($email).'&emailId=4">LOG IN</a>
                     <br><p>Microsoft</p>
                     <img width="190" height = "100" src="http://localhost/Logo/microsoft_logo.png">
                     ';

@@ -41,14 +41,13 @@ session_start();
                         <a href="login.php">Login</a>
                         <a href="signUp.php">Sign Up</a>
                     </ul>';
-                    ?>
                     
-                    <?php
             }else{
                 $name = $_SESSION['fname'];
-                echo "<ul><a href='profile.php'><span class='welcome'>Welcome, $name!</span></a><a href='logOut.php'>Log Out</a></ul>";           
-            }
-            
+                ?>
+                <ul><a href='profile.php'><span class='welcome'>Welcome, <?php echo htmlspecialchars($name);?>!</span></a><a href='logOut.php'>Log Out</a></ul>";           
+            <?php
+            } 
     ?>
     
 </header>

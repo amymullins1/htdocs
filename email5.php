@@ -45,7 +45,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
                     <span>Hi,</span><br>
                     <h3>The payment for your next bill has been declind</h3>
                     <p>Update your billing imformation to prevent youre account being terminated</p>
-                    <a href="http://localhost/linkClicked.php?email='.$email.'&emailId=5">Pay Again</a>
+                    <a href="http://localhost/linkClicked.php?email='.htmlspecialchars($email).'&emailId=5">Pay Again</a>
                     <br><p>Netflix</p>
                     
                     ';

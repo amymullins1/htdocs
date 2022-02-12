@@ -183,12 +183,11 @@ if(isset($_POST['endSim'])){
         </nav>
         <hr>
         <?php $name = strtoupper($_SESSION['fname']); 
-       
-echo "<h1><p class = 'menuHeader1'>Welcome Back, $name!</p></h1></header>";  //welcome back message with user's name at the top of the screen
- 
- ?>
-    
-    
+       ?>
+<h1><p class = 'menuHeader1'>Welcome Back, <?php echo htmlspecialchars($name);?>!</p></h1></header>  
+<!--welcome back message with user's name at the top of the screen-->
+<!--htmlspecialchars() function converts any inputted html code to string to prevent XXS.-->
+
 <!-- Styling for the tabs within the profile-->
 <style>
     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;800&family=Source+Sans+Pro:wght@300;400;600&display=swap');
@@ -307,17 +306,17 @@ echo "<h1><p class = 'menuHeader1'>Welcome Back, $name!</p></h1></header>";  //w
     $stmt->store_result();
     $stmt->bind_result($uname, $fname, $lname, $email, $dob);
         $stmt->fetch();
-    
-        echo "<span class='detailsText'>Name:</span>";
-    echo "<span class='fieldText'>$fname $lname</span><br>";
-    echo "<br><span class='detailsText'>Username:</span>";
-    echo "<span class='fieldText'>$uname</span>";
-    echo "<br><br><span class='detailsText'>Email:</span>";
-    echo"<span class='fieldText'>$email</span><br>";
-    echo "<br><span class='detailsText'>Date of Birth:</span>";
-    echo "<span class='fieldText'>$dob</span>";
-   
     ?>
+    <span class='detailsText'>Name:</span>
+    <span class='fieldText'><?php echo htmlspecialchars($fname)." ".htmlspecialchars($lname);?></span><br>
+    <br><span class='detailsText'>Username:</span>
+    <span class='fieldText'><?php echo htmlspecialchars($uname);?></span>
+    <br><br><span class='detailsText'>Email:</span>
+    <span class='fieldText'><?php echo htmlspecialchars($email);?></span><br>
+    <br><span class='detailsText'>Date of Birth:</span>
+    <span class='fieldText'><?php echo htmlspecialchars($dob);?></span>
+   
+    
     
 </div>
 
@@ -342,16 +341,16 @@ echo "<h1><p class = 'menuHeader1'>Welcome Back, $name!</p></h1></header>";  //w
 <form onSubmit= "return confirm('Are you sure you would like to make these changes?')" action="" method="post"> <!--Confirm() checks the user wants to proceed before submitting the form -->
                 <span style="margin-left: 3%; font-size: 22px;">Username: </span>
                 <input style="border-radius: 12px; border: 2px solid #7DCC8C; font-family: 'IBM Plex Mono', monospace;
-                font-size: 16px; padding: 1.5px;" type="text" name="uname" placeholder=" <?php echo $uname; ?>" id="uname"><br><br>
+                font-size: 16px; padding: 1.5px;" type="text" name="uname" placeholder=" <?php echo htmlspecialchars($uname); ?>" id="uname"><br><br>
                 <span style="margin-left: 3%; font-size: 22px;">First name: </span>
                 <input style="border-radius: 12px; border: 2px solid #7DCC8C; font-family: 'IBM Plex Mono', monospace;
-                font-size: 16px; padding: 1.5px;" type="text" name="fname" placeholder= " <?php echo $fname; ?>" id="fname"><br><br>
+                font-size: 16px; padding: 1.5px;" type="text" name="fname" placeholder= " <?php echo htmlspecialchars($fname); ?>" id="fname"><br><br>
                 <span style="margin-left: 3%; font-size: 22px;" >Last name: </span>
                 <input style="border-radius: 12px; border: 2px solid #7DCC8C; font-family: 'IBM Plex Mono', monospace;
-                font-size: 16px; padding: 1.5px;" type="text" name="lname" placeholder= " <?php echo $lname; ?>" id="lname"><br><br>
+                font-size: 16px; padding: 1.5px;" type="text" name="lname" placeholder= " <?php echo htmlspecialchars($lname); ?>" id="lname"><br><br>
                 <span style="margin-left: 3%; font-size: 22px;">Email: </span>
                 <input style="width: 40%; border-radius: 12px; border: 2px solid #7DCC8C; font-family: 'IBM Plex Mono', monospace;
-                font-size: 16px; padding: 1.5px;" type="text" name="email" placeholder=" <?php echo $email; ?>" id="email"><br><br>
+                font-size: 16px; padding: 1.5px;" type="text" name="email" placeholder=" <?php echo htmlspecialchars($email); ?>" id="email"><br><br>
                 <input type="submit" value="Save Changes" name="editSubmit">
 </form>
 <style>
@@ -396,9 +395,9 @@ $stmt->fetch();
 if($emailNum ==6){
     ?>
     <h2 style="text-align: center;">Simulation finished!</h2>
+    <h3>Results:</h3>
+    <p>You scored: <?php echo htmlspecialchars($score);?>/5!</p>
     <?php
-    echo "<h3>Results:</h3>";
-    echo "<p>You scored: $score/5!</p>";
     $stmt=$con->prepare('SELECT EmailNum from results where UserId = ? and HasClicked = 1;');
     $stmt->bind_param('i', $uid);
     $stmt->execute();
@@ -585,10 +584,13 @@ $stmt=$con->prepare('SELECT EmailNum from results where UserId = ? and HasClicke
     $stmt->execute();
     $results = $stmt->get_result();
     while($rowData = $results->fetch_assoc()){
-        echo "<tr>";
-        echo "<td style='border: 2px solid white; background-color: rgba(65, 135, 148, .5); '>".$rowData['Score']."/5</td>";
-        echo "<td style='border: 2px solid white; background-color: rgba(65, 135, 148, .5);'>".$rowData['SavedDate']."/5</td>";
-        echo "</tr>";
+        ?>
+        <tr>
+        <td style='border: 2px solid white; background-color: rgba(65, 135, 148, .5); '><?php echo htmlspecialchars($rowData['Score']); ?>/5</td>
+        <td style='border: 2px solid white; background-color: rgba(65, 135, 148, .5);'><?php echo htmlspecialchars($rowData['SavedDate']); ?>/5</td>
+        </tr>
+    
+    <?php
     }  
 
 ?>

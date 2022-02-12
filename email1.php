@@ -45,7 +45,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
                     <p>Dear Sir/Madam</p>
                     <br>You have been selected to receeve your corona vacine.</br>
                     <br>Click the link below to book the vaccine.</br>
-                    <a href="http://localhost/linkClicked.php?email='.$email.'&emailId=1">Click Here</a>
+                    <a href="http://localhost/linkClicked.php?email='.htmlspecialchars($email).'&emailId=1">Click Here</a>
                     <br>NHS</br>';    
         $mail->send();
 
