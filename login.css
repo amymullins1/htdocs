@@ -79,14 +79,8 @@ form.loginForm {
     margin-left: 5%;
     font-size: 13px;
 }
-
-.forgotPassword {
-    text-align: center;
-    font-family: 'Source Sans Pro', sans-serif;
-    color: #55939f;
-    font-weight: 600;
    
-}
+
 
 .error{
     color: red;

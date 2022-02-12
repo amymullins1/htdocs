@@ -5,10 +5,10 @@ body {
 }
 
 .box{
-    background-color: #FFFFFF;
+    background-color: white;
     width: 400px;
-    height: 650px;
-    margin: 4em auto;
+    height: 750px;
+    margin: 2em auto;
     border-radius: 1.5em;
     box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
 }
@@ -29,6 +29,23 @@ body {
     font-weight: 600;
     padding-top: 1px;
 }
+.passwordMust{
+    margin-left: 1em;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 15px;
+    color: #55939f;
+    font-weight: 600;
+    padding-top:1px;
+ 
+}
+.bullet{
+    margin-left: 3em;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 15px;
+    color: #55939f;
+    font-weight: 600;
+    
+}
 
 .fields {
 text-align: center;
@@ -36,15 +53,14 @@ width: 76%;
 color: rgb(38, 50, 56);
 letter-spacing: 1px;
 background: rgba(136, 126, 126, 0.04);
-padding: 10px 20px;
+padding: 9px 18px;
 border: 0;
 border-radius: 20px;
 outline: none;
 box-sizing: border-box;
 border: 2px solid rgba(0, 0, 0, 0.02);
-margin-bottom: 50px;
 margin-left: 46px;
-margin-bottom: 27px;
+margin-bottom: 18px;
 font-family: 'Source Sans Pro', sans-serif;
 font-weight: 700;
 font-size: 15px;

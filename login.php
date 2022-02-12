@@ -20,7 +20,6 @@ if($stmt = $con->prepare('SELECT UserId, Pwd, Fname, Lname, Email, DOB FROM acco
     $stmt->store_result();
 	// Store the result so we can check if the account exists in the database.
     if ($stmt->num_rows > 0) {
-        echo "done";
         $stmt->bind_result($uid, $password, $fname, $lname, $email, $dob);
         $stmt->fetch();
         if (password_verify($_POST['password'], $password)) {
@@ -89,7 +88,10 @@ if($stmt = $con->prepare('SELECT UserId, Pwd, Fname, Lname, Email, DOB FROM acco
                         echo "<span class='error'>$error</span>";
                     }
                 ?>  
-                <p class="forgotPassword">Forgot Password?</p>
+                <a style=" margin-left: 35%;
+                    font-family: 'Source Sans Pro', sans-serif;
+                    color: #55939f;
+                    font-weight: 600;" href="forgotPassword.php">Forgot Password?</a><br><br>
                 <a href="signUp.php"><button class="signUp">Sign Up</button></a>
             </div>
 		

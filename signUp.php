@@ -15,7 +15,7 @@ if ( mysqli_connect_errno() ) {
 	// If there is an error with the connection, stop the script and display the error.
 	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
-
+$password = $_POST['password'];
 if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
     $stmt->bind_param('s', $_POST['username']);
     $stmt->execute();
@@ -30,7 +30,9 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
         if($stmt->num_rows>0){
             $_SESSION['error']="Email already exists!";
          
-        }elseif($stmt = $con->prepare('INSERT INTO accounts(Username, Pwd, Fname, Lname, Email, DOB, lastActive) VALUES (?, ?, ?, ?, ?, ?, ?)')) {
+        }elseif(!preg_match('/^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]{8,20}$/', $password)) {
+            $_SESSION['error']="Password does not match the requirements!";
+       }elseif($stmt = $con->prepare('INSERT INTO accounts(Username, Pwd, Fname, Lname, Email, DOB, lastActive) VALUES (?, ?, ?, ?, ?, ?, ?)')) {
        
         $stmt->bind_param('sssssss', $_POST['username'], $hashedPassword, $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['dob'], date("d-m-y"));
         $stmt->execute();
@@ -61,14 +63,30 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
     $stmt->close();
 }
 ?>
+
 <link rel="stylesheet" href="signUp.css">
+<link rel="stylesheet" href="homepage.css"/>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
 		<title>TechKnow | Sign Up</title>
 		
-	</head>
+    </head>
+    <header class="mainHeader" style="margin: 0px;">
+        <nav>
+            <ul>
+            <div id = "menu" class="menu">
+                <div id="logo" class="logoImage"><li><a href="index.php" ><img class="logoImage" src="Logo/horizontalCover.png"></a></li></div>
+                <div class="menuText">
+                <li><a href="index.php">HOME</a></li>
+                <li><a href="about.php">ABOUT</a></li>
+                <li><a href="login.php">LOGIN</a></li>
+                </div>
+            </div>
+            </ul>
+        </nav>
+</header>
 	<body>
 		<div class="box">
             <h1 class="signUp">Sign Up</h1>
@@ -76,9 +94,17 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
 			<form class="signUpForm" action="" method="post">
 				<input class="fields" type="text" name="username" placeholder="Username" id="username" required>
                 <input class="fields" type="password" name="password" placeholder="Password" id="password" required>
+                <label class="passwordMust">Password must contain:</label><br>
+                <li class="bullet">A <b>lowercase</b> letter</li>
+                <li class="bullet">A <b>uppercase</b> letter</li>
+                <li class="bullet">A <b>number</b></li>
+                <li class="bullet">A <b>special character</b>(@#-_$%^&+=§!?)</li>
+                <li class="bullet">Minimum of <b>8 characters</b></li>
+                <li class="bullet">Maxmimum of <b>60 characters</b></li><br>
                 <input class="fields" type="text" name="fname" placeholder="First Name" id="fname" required>
                 <input class="fields" type="text" name="lname" placeholder="Last Name" id="lname" required>
                 <input class="fields" type="text" name="email" placeholder="Email" id="email" required>
+                <br><label class="passwordMust">Date of Birth:</label>
                 <input class="fields" type="date" name="dob" placeholder="Date of Birth" id="dob" required>
                 <input class="submit" type="submit" value="Submit" name='submit'>
             </form>
