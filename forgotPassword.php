@@ -11,7 +11,7 @@ $DATABASE_USER = 'root';
 $DATABASE_PASS = '';
 $DATABASE_NAME = 'myProject';
 $mail=new PHPMailer(true);
-$email = $_POST['email'];
+
 // Try and connect using the information above.
 $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 if ( mysqli_connect_errno() ) {
@@ -19,6 +19,24 @@ if ( mysqli_connect_errno() ) {
 	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
 if(isset($_POST['submit'])){ //if the login button is clicked
+            $email = $_POST['email'];
+            $randNum =  mt_rand(1000,9999);
+            $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
+            $stmt=$con->prepare('Select UserId from accounts where email = ?');
+            $stmt->bind_param('s', $email);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->bind_result($uid);
+            $stmt->fetch(); 
+
+            $stmt=$con->prepare('Delete from auth where UserId = ?');
+            $stmt->bind_param('s', $uid);
+            $stmt->execute();
+            
+            $stmt=$con->prepare('Insert into auth(UserId, AuthCode) Values(?, ?)');
+            $stmt->bind_param('ss', $uid, $hashedRandNum);
+            $stmt->execute();
+
 if($stmt = $con->prepare('SELECT Fname FROM accounts WHERE Email = ?')) {
 	$stmt->bind_param('s', $email);
     $stmt->execute();
@@ -44,9 +62,11 @@ if($stmt = $con->prepare('SELECT Fname FROM accounts WHERE Email = ?')) {
         $mail->Subject='Password Reset';
       
         $mail->Body='<p>Dear '.$name.', </p><br><p>Please click the link below to reset your password: </p><br>
-        <a href="http://localhost/resetPass.php?email='.htmlspecialchars($email).'">Reset Password</a><br><p>The TechKNOW Team</p>';
+        <a href="http://localhost/resetPass.php?email='.htmlspecialchars($email).'">Reset Password</a><br>
+        <p>The authentication code is: '.$randNum.'<br><p>The TechKNOW Team</p>';
              
         $mail->send();
+        Header('Location: login.php');
     }else{
         $_SESSION['error'] = "Email does not exist!";
     
