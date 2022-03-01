@@ -20,8 +20,10 @@ if ( mysqli_connect_errno() ) {
 }
 if(isset($_POST['submit'])){ //if the login button is clicked
             $email = $_POST['email'];
-            $randNum =  mt_rand(1000,9999);
+            $randNum =  mt_rand(10000000,99999999);
             $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
+            $datetime = date("Y-m-d H:i:s");
+
             $stmt=$con->prepare('Select UserId from accounts where email = ?');
             $stmt->bind_param('s', $email);
             $stmt->execute();
@@ -33,8 +35,8 @@ if(isset($_POST['submit'])){ //if the login button is clicked
             $stmt->bind_param('s', $uid);
             $stmt->execute();
             
-            $stmt=$con->prepare('Insert into auth(UserId, AuthCode) Values(?, ?)');
-            $stmt->bind_param('ss', $uid, $hashedRandNum);
+            $stmt=$con->prepare('Insert into auth(UserId, AuthCode, DateTime) Values(?, ?, ?)');
+            $stmt->bind_param('sss', $uid, $hashedRandNum, $datetime);
             $stmt->execute();
 
 if($stmt = $con->prepare('SELECT Fname FROM accounts WHERE Email = ?')) {
@@ -51,7 +53,7 @@ if($stmt = $con->prepare('SELECT Fname FROM accounts WHERE Email = ?')) {
         $mail->Password='HelloWorld1';
         $mail->Username='amyloumullins1414@hotmail.com'; // SMTP username
         // SMTP password
-        $mail->SMTPSecure='SSL';
+        $mail->SMTPSecure='TLS';
         $mail->Port=587;
          
         $mail->setFrom('amyloumullins1414@hotmail.com', 'TechKNOW');
@@ -62,8 +64,8 @@ if($stmt = $con->prepare('SELECT Fname FROM accounts WHERE Email = ?')) {
         $mail->Subject='Password Reset';
       
         $mail->Body='<p>Dear '.$name.', </p><br><p>Please click the link below to reset your password: </p><br>
-        <a href="http://localhost/resetPass.php?email='.htmlspecialchars($email).'">Reset Password</a><br>
-        <p>The authentication code is: '.$randNum.'<br><p>The TechKNOW Team</p>';
+        <a href="http://localhost/resetPass.php?id='.$randNum.'">Reset Password</a><br>
+        <p>The TechKNOW Team</p>';
              
         $mail->send();
         Header('Location: login.php');

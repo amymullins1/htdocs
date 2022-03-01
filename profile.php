@@ -20,7 +20,7 @@ if ( mysqli_connect_errno() ) {
 	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
 //the code for starting the simulation if the user wishes to do so
-if(isset($_POST['submit'])){ //if the submit button is pressed
+if(isset($_POST['start'])){ //if the submit button is pressed
     //update their next email number in emailTrack so their simulation is viewed as begun
     if($stmt = $con->prepare('UPDATE emailTrack SET Next_email_num = ? WHERE UserId = ?')){
     $nextEmail = 1;

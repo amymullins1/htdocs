@@ -6,40 +6,34 @@ $DATABASE_USER = 'root';
 $DATABASE_PASS = '';
 $DATABASE_NAME = 'myProject';
 
-$email = $_GET['email'];
+$id = $_GET['id'];
 // Try and connect using the information above.
 $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 if ( mysqli_connect_errno() ) {
 	// If there is an error with the connection, stop the script and display the error.
 	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
+$stmt = $con->prepare('SELECT UserId, AuthCode from auth');
+$stmt->execute();
+$results = $stmt->get_result();
+$count = 0;
+while($rowData = $results->fetch_assoc()){
+    if(password_verify($id, $rowData['AuthCode'])){
+        $uid = $rowData['UserId'];
+        $count +=1;
+    }
+}
+if($count == 1){
 if(isset($_POST['submit'])){ //if the login button is clicked
-    $stmt = $con->prepare('Select UserId from accounts where Email = ?');
-    $stmt->bind_param('s', $email);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($uid);
-    $stmt->fetch();
-   
-    $stmt = $con->prepare('Select AuthCode from auth where UserId = ?');
-    $stmt->bind_param('s', $uid);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($authCode);
-    $stmt->fetch(); 
-    
-    if(password_verify($_POST['auth'], $authCode)){
-        
-        $stmt = $con->prepare('Delete from auth where UserId = ?');
-        $stmt->bind_param('s', $uid);
-        $stmt->execute();
-        
         
     if($_POST['password1'] == $_POST['password2']){
     if(preg_match('/^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]{8,20}$/', $_POST['password1'])) {
     $hashedPassword = password_hash($_POST['password1'], PASSWORD_BCRYPT);
-    $stmt = $con->prepare('Update accounts set Pwd = ? where Email = ?');
-    $stmt->bind_param('ss', $hashedPassword, $_GET['email']);
+    $stmt = $con->prepare('Update accounts set Pwd = ? where UserId = ?');
+    $stmt->bind_param('ss', $hashedPassword, $uid);
+    $stmt->execute();
+    $stmt = $con->prepare('Delete from auth where UserId = ?');
+    $stmt->bind_param('s', $uid);
     $stmt->execute();
     $_SESSION['success'] = "Password updated!";
     }else{
@@ -47,8 +41,6 @@ if(isset($_POST['submit'])){ //if the login button is clicked
     }
     }else{
         $_SESSION['error'] = "Passwords do not match! <br> Please Try Again.";	
-}}else{
-    $_SESSION['error'] = "Invalid authentication code!";
 }
 }
 ?>
@@ -79,19 +71,12 @@ if(isset($_POST['submit'])){ //if the login button is clicked
 	<body>
 		<div style="background-color: #FFFFFF;
                     width: 400px;
-                    height: 630px;
+                    height: 530px;
                     margin: 5em auto;
                     border-radius: 1.5em;
                     box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);">
 			<form class="loginForm" action="" method="post">
             <h1 class="login">Reset Password</h1>
-
-            <label style="margin-left: 1em;
-                            font-family: 'Source Sans Pro', sans-serif;
-                            font-weight: bold;
-                            font-size: 17px;
-                            color: #3e717a;">Authentication Code: </label>
-                <input class="fields" type="text" name="auth" required>
                 <label style="margin-left: 1em;
                             font-family: 'Source Sans Pro', sans-serif;
                             font-weight: bold;
@@ -180,4 +165,10 @@ if(isset($_POST['submit'])){ //if the login button is clicked
 <?php
     unset($_SESSION["error"]);
     unset($_SESSION["success"]);
+    }else{
+         ?>
+             <script> alert("Invalid auth");</script>
+                    <?php
+                }            
+
 ?>

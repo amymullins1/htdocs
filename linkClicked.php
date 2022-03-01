@@ -6,22 +6,31 @@ $DATABASE_USER = 'projectUser';
 $DATABASE_PASS = '5Iix/r1PyO7sixqf';
 $DATABASE_NAME = 'myProject';
 
+$id = $_GET['id'];
+$emailID = $_GET['emailId'];
+
 $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 if ( mysqli_connect_errno() ) {
 	// If there is an error with the connection, stop the script and display the error.
 	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
+
+//checks the authentication code in the URL is valid and if it is valid, gets the userId
+$stmt = $con->prepare('SELECT UserId, AuthCode from results where EmailNum = ?');
+$stmt->bind_param('i', $emailID);
+$stmt->execute();
+$results = $stmt->get_result();
+$count = 0;
+while($rowData = $results->fetch_assoc()){
+    echo($rowData['AuthCode']);
+    if(password_verify($id, $rowData['AuthCode'])){
+        $uid = $rowData['UserId'];
+        $count +=1;
+    }
+}
 //gets the email address and email ID from the url and stores in variables
-$email = $_GET['email'];
-$emailID = $_GET['emailId'];
-if ($stmt = $con->prepare('SELECT UserId FROM accounts WHERE Email = ?')) {
-    //gets the user id corresponding to the user with the email address in the url
-	$stmt->bind_param('s', $email);  
-    $stmt->execute(); //executes the query
-    $stmt->store_result(); //stores the results the query returns
-    if($stmt->num_rows()>0){ //checks if the user exists
-        $stmt->bind_result($uid);
-        $stmt->fetch();
+
+if($count==1){
         if($stmt = $con->prepare('UPDATE results set HasClicked = 1 where UserId = ? and EmailNum = ?')){
             //updates the results record for the corresponding email and user
             $stmt->bind_param('ss', $uid, $emailID); 
@@ -32,8 +41,7 @@ if ($stmt = $con->prepare('SELECT UserId FROM accounts WHERE Email = ?')) {
             $stmt->bind_param('s', $uid); 
             $stmt->execute();
         }
-    }
-}
+
 ?>
 <link rel="stylesheet" href="homepage.css">
 <!DOCTYPE html>
@@ -63,3 +71,9 @@ if ($stmt = $con->prepare('SELECT UserId FROM accounts WHERE Email = ?')) {
 </body>
 </html>
 
+<?php }else{
+    ?>
+    <script>alert("FAILED AUTH");</script>
+    <?php
+}
+?>

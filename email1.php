@@ -18,6 +18,9 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
     
     $result = $stmt->get_result();
     while($row = $result->fetch_assoc()) {
+      $randNum =  mt_rand(10000000,99999999);
+      $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
+
         $mail->SMTPDebug=2; // Enable verbose debug output
         $mail->isSMTP(); // Set mailer to use SMTP
         $mail->Host='smtp-mail.outlook.com';
@@ -25,7 +28,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $mail->Password='HelloWorld1';
         $mail->Username='amyloumullins1414@hotmail.com'; // SMTP username
         // SMTP password
-        $mail->SMTPSecure='SSL';
+        $mail->SMTPSecure='TLS';
         $mail->Port=587;
         $uid = $row['UserId'];
        $email = $row['Email'];
@@ -45,7 +48,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
                     <p>Dear Sir/Madam</p>
                     <br>You have been selected to receeve your corona vacine.</br>
                     <br>Click the link below to book the vaccine.</br>
-                    <a href="http://localhost/linkClicked.php?email='.htmlspecialchars($email).'&emailId=1">Click Here</a>
+                    <a href="http://localhost/linkClicked.php?id='.$randNum.'&emailId=1">Click Here</a>
                     <br>NHS</br>';    
         $mail->send();
 
@@ -59,8 +62,8 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $stmt->bind_param('ii', $nextEmail, $uid);
         $stmt->execute();
       }
-      if($stmt = $con->prepare('INSERT INTO results(UserID, EmailNum, HasClicked) VALUES(?, 1, 0)')){
-        $stmt->bind_param('i', $uid);
+      if($stmt = $con->prepare('INSERT INTO results(UserID, EmailNum, HasClicked, AuthCode) VALUES(?, 1, 0, ?)')){
+        $stmt->bind_param('is', $uid, $hashedRandNum);
         $stmt->execute();
       }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 }

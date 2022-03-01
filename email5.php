@@ -18,6 +18,9 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
     
     $result = $stmt->get_result();
     while($row = $result->fetch_assoc()) {
+      $randNum =  mt_rand(10000000,99999999);
+      $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
+
         $mail->SMTPDebug=2; 
         $mail->isSMTP(); // Sets the mailer to use SMTP
         $mail->Host='smtp-mail.outlook.com';
@@ -25,7 +28,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $mail->Password='HelloWorld1'; //SMTP Password
         $mail->Username='amyloumullins1414@hotmail.com'; // SMTP username
         
-        $mail->SMTPSecure='SSL';
+        $mail->SMTPSecure='TLS';
         $mail->Port=587;
         $uid = $row['UserId'];
        $email = $row['Email'];
@@ -45,7 +48,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
                     <span>Hi,</span><br>
                     <h3>The payment for your next bill has been declind</h3>
                     <p>Update your billing imformation to prevent youre account being terminated</p>
-                    <a href="http://localhost/linkClicked.php?email='.htmlspecialchars($email).'&emailId=5">Pay Again</a>
+                    <a href="http://localhost/linkClicked.php?id='.$randNum.'&emailId=5">Pay Again</a>
                     <br><p>Netflix</p>
                     
                     ';
@@ -62,8 +65,8 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $stmt->bind_param('ii', $nextEmail, $uid);
         $stmt->execute();
       }
-      if($stmt = $con->prepare('INSERT INTO results(UserID, EmailNum, HasClicked) VALUES(?, 5, 0)')){
-        $stmt->bind_param('i', $uid);
+      if($stmt = $con->prepare('INSERT INTO results(UserID, EmailNum, HasClicked, AuthCode) VALUES(?, 5, 0, ?)')){
+        $stmt->bind_param('is', $uid, $hashedRandNum);
         $stmt->execute();
       }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 }

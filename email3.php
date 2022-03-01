@@ -18,6 +18,8 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
     
     $result = $stmt->get_result();
     while($row = $result->fetch_assoc()) {
+      $randNum =  mt_rand(10000000,99999999);
+      $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
         $mail->SMTPDebug=2; 
         $mail->isSMTP(); // Sets the mailer to use SMTP
         $mail->Host='smtp-mail.outlook.com';
@@ -25,7 +27,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $mail->Password='HelloWorld1'; //SMTP Password
         $mail->Username='amyloumullins1414@hotmail.com'; // SMTP username
         
-        $mail->SMTPSecure='SSL';
+        $mail->SMTPSecure='TLS';
         $mail->Port=587;
         $uid = $row['UserId'];
        $email = $row['Email'];
@@ -44,7 +46,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $mail->Body='<p style="color: red;font-weight:bolder;">EXCLUSIVE</p>
                     <br><h1 style="color: red; font-weight:bolder;">YOU HAVE BEEN CHOSAN TO WIN $1000</h1>
                     <p style="color:red;font-weight:bolder;">CLICK THE LINK BELOW TO CLAIM</p><br>
-                    <a style="color: red;font-weight:bolder;" href="http://localhost/linkClicked.php?email='.htmlspecialchars($email).'&emailId=3">CLICK ME</a>';
+                    <a style="color: red;font-weight:bolder;" href="http://localhost/linkClicked.php?id='.$randNum.'&emailId=3">CLICK ME</a>';
                        
         $mail->send();
 
@@ -58,8 +60,8 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $stmt->bind_param('ii', $nextEmail, $uid);
         $stmt->execute();
       }
-      if($stmt = $con->prepare('INSERT INTO results(UserID, EmailNum, HasClicked) VALUES(?, 3, 0)')){
-        $stmt->bind_param('i', $uid);
+      if($stmt = $con->prepare('INSERT INTO results(UserID, EmailNum, HasClicked, AuthCode) VALUES(?, 3, 0, ?)')){
+        $stmt->bind_param('is', $uid, $hashedRandNum);
         $stmt->execute();
       }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 }

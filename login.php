@@ -46,6 +46,12 @@ if($stmt = $con->prepare('SELECT UserId, Pwd, Email FROM accounts WHERE Username
             $stmt=$con->prepare('Insert into auth(UserId, AuthCode) Values(?, ?)');
             $stmt->bind_param('ss', $uid, $hashedRandNum);
             $stmt->execute();
+            $stmt = $con->prepare('SELECT Fname FROM accounts WHERE Email = ?');
+                $stmt->bind_param('s', $email);
+                $stmt->execute();
+                $stmt->store_result();
+                $stmt->bind_result($name);
+                $stmt->fetch();
 
             $mail=new PHPMailer(true); // Passing `true` enables exceptions
             $mail->SMTPDebug=2; // Enable verbose debug output
@@ -55,7 +61,7 @@ if($stmt = $con->prepare('SELECT UserId, Pwd, Email FROM accounts WHERE Username
             $mail->Password='HelloWorld1';
             $mail->Username='amyloumullins1414@hotmail.com'; // SMTP username
             // SMTP password
-            $mail->SMTPSecure='SSL';
+            $mail->SMTPSecure='TLS';
             $mail->Port=587;
             
             $mail->setFrom('amyloumullins1414@hotmail.com', 'TechKNOW');
@@ -67,9 +73,9 @@ if($stmt = $con->prepare('SELECT UserId, Pwd, Email FROM accounts WHERE Username
             $mail->isHTML(true); // Set email format to HTML
             $mail->Subject='Authentication Code';
           
-            $mail->Body='Dear '.$fname.', <br>Below is your 4 digit authentication code:<br>'.$randNum.'
-            Please DO NOT share this code with anyone.<br>
-            The TechKNOW Team';    
+            $mail->Body='<p>Dear '.$name.',</p><br><p>Below is your 4 digit authentication code:</p><br><b>'.$randNum.'</b><br><p>
+            Please DO NOT share this code with anyone.</p><br>
+            <p>The TechKNOW Team</p>';    
             $mail->send();
             Header('Location: auth.php');
 

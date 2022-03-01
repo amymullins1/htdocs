@@ -15,9 +15,14 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
     $emailNum = 4;
     $stmt->bind_param('i', $emailNum);
     $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($uid, $email);
+    $stmt->fetch();
     
-    $result = $stmt->get_result();
-    while($row = $result->fetch_assoc()) {
+    
+      $randNum =  mt_rand(10000000,99999999);
+      $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
+
         $mail->SMTPDebug=2; 
         $mail->isSMTP(); // Sets the mailer to use SMTP
         $mail->Host='smtp-mail.outlook.com';
@@ -25,10 +30,9 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $mail->Password='HelloWorld1'; //SMTP Password
         $mail->Username='amyloumullins1414@hotmail.com'; // SMTP username
         
-        $mail->SMTPSecure='SSL';
+        $mail->SMTPSecure='TLS';
         $mail->Port=587;
-        $uid = $row['UserId'];
-       $email = $row['Email'];
+        
        try {
         //settings
     
@@ -44,7 +48,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $mail->Body='Hi '.$email.'<br>
                     <p>YOUR MICROSOFT ACCOUNT HAS BEEN HACKED</p>
                     <br><p>YOU MUST LOG IN NOW TO SAVE YOUR ACCOUNT BEFOR ITS TOO LAIT!</p>
-                    <a href="http://localhost/linkClicked.php?email='.htmlspecialchars($email).'&emailId=4">LOG IN</a>
+                    <a href="http://localhost/linkClicked.php?id='.$randNum.'&emailId=4">LOG IN</a>
                     <br><p>Microsoft</p>
                     <img width="190" height = "100" src="http://localhost/Logo/microsoft_logo.png">
                     ';
@@ -61,10 +65,12 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         $stmt->bind_param('ii', $nextEmail, $uid);
         $stmt->execute();
       }
-      if($stmt = $con->prepare('INSERT INTO results(UserID, EmailNum, HasClicked) VALUES(?, 4, 0)')){
-        $stmt->bind_param('i', $uid);
+      
+      if($stmt = $con->prepare('INSERT INTO results(UserID, EmailNum, HasClicked, AuthCode) VALUES(?, 4, 0, ?)')){
+        $stmt->bind_param('is', $uid, $hashedRandNum);
         $stmt->execute();
-      }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+      } 
+
 }
-}
+
 ?>
