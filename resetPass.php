@@ -27,7 +27,7 @@ if($count == 1){
 if(isset($_POST['submit'])){ //if the login button is clicked
         
     if($_POST['password1'] == $_POST['password2']){
-    if(preg_match('/^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]{8,20}$/', $_POST['password1'])) {
+    if(preg_match('/^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]{8,60}$/', $_POST['password1'])) {
     $hashedPassword = password_hash($_POST['password1'], PASSWORD_BCRYPT);
     $stmt = $con->prepare('Update accounts set Pwd = ? where UserId = ?');
     $stmt->bind_param('ss', $hashedPassword, $uid);

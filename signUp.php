@@ -30,7 +30,7 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
         if($stmt->num_rows>0){
             $_SESSION['error']="Email already exists!";
          
-        }elseif(!preg_match('/^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]{8,20}$/', $password)) {
+        }elseif(!preg_match('/^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]{8,60}$/', $password)) {
             $_SESSION['error']="Password does not match the requirements!";
        }elseif($stmt = $con->prepare('INSERT INTO accounts(Username, Pwd, Fname, Lname, Email, DOB, lastActive) VALUES (?, ?, ?, ?, ?, ?, ?)')) {
        
