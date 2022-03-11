@@ -1,7 +1,7 @@
 <?php
 session_start();
 //session timeout after x minutes
-if((isset($_SESSION['inactive']))&& (time() - $_SESSION['inactive'] > 300)) {
+if((isset($_SESSION['inactive']))&& (time() - $_SESSION['inactive'] > 1800)) {
     session_unset(); 
     session_destroy(); 
 }
@@ -138,7 +138,7 @@ if(isset($_POST['endSim'])){
         <script type="text/javascript">
         var secsCounter = 0;
         var timer = null;
-        var timeOutSecs = 300; //5 minutes
+        var timeOutSecs = 1800; //30 minutes
 
         //if the mouse is moved, clicked or a key is pressed, the counter is set back to 0
         document.onclick = function () { secsCounter = 0; };
@@ -173,11 +173,10 @@ if(isset($_POST['endSim'])){
         <nav>
             <ul>
             <div id = "menu" class="menu">
-                <div id="logo" class="logoImage"><li><a href="homepage.html" ><img class="logoImage" src="Logo/horizontalCover.png"></a></li></div>
+                <div id="logo" class="logoImage"><li><a href="index.php" ><img class="logoImage" src="Logo/horizontalCover.png"></a></li></div>
                 <div class="menuText">
                     <li><a href="index.php">HOME</a></li>
                 <li><a href="about.php">ABOUT</a></li>
-                <li><a href="modules.html">MODULES</a></li>
                 </div>
             </div>
             </ul>
@@ -219,12 +218,12 @@ if(isset($_POST['endSim'])){
   
   /* Styling for when the user hovers over a button, change the background colour */
   .tab button:hover {
-    background-color: rgba(65, 135, 148, .2);
+    background-color: rgba(255, 192, 203, .3);
   }
   
   /* Styling the background colour of the button which is being clicked on */
   .tab button.active {
-    background-color: rgba(65, 135, 148, .4);
+    background-color: rgba(255, 192, 203, .7);
   }
   
   /* Styling for the contents of each tab */
@@ -484,7 +483,7 @@ elseif($emailNum == 0){
 }
 else{
    
-    echo "<p>Simulation in progress...</p><br>";
+    echo "<p style='font-size: 30px;'><b>Simulation in progress...<b></p><br>";
     echo "<span>You will be able to view your score and feedback at the end of simulation. </span>";
    
 }

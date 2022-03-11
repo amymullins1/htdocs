@@ -1,9 +1,6 @@
 <?php
 session_start();
-if(isset($_SESSION['validUser']) && !isset($_SESSION['loggedIn'])){
-    session_unset();
-    session_destroy();
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +9,7 @@ if(isset($_SESSION['validUser']) && !isset($_SESSION['loggedIn'])){
 <script type="text/javascript">
         var secsCounter = 0;
         var timer = null;
-        var timeOutSecs = 10; //10 seconds
+        var timeOutSecs = 1800; //30 minutes
         
         //if the mouse is moved, clicked or a key is pressed, the counter is set back to 0
         document.onclick = function () { secsCounter = 0; };
@@ -76,14 +73,14 @@ if(isset($_SESSION['validUser']) && !isset($_SESSION['loggedIn'])){
         <h1 style="font-size: 28px; margin-left: 20px;">What is Phishing?</h1>
     </div>
     <div class="text">
-        <p style="font-size: 22px; margin-left: 10px;">Phishing is a type of social engineering attack that is aimed directly at you, the internet user. These attacks work by tricking the user into handing over sensitive information, such as credit card details, or login credentials. Attackers can achieve this by encouraging the user to click on a malicious link. This could be delivered to the user in an email or text message, pretending to be from a trusted source. These attacks can lead to disastrous results for the victim, such as loss of bank funds, or unauthorised purchases. In most cases, the victim of a phishing attack suffers from a financial loss.</p>
+        <p style="font-size: 22px; margin-left: 10px;">Phishing is a type of social engineering attack that is <span style="color: pink;"><b>aimed directly at you</b></span>, the internet user. These attacks work by tricking the user into handing over sensitive information, such as credit card details, or login credentials. Attackers can achieve this by encouraging the user to click on a malicious link. This could be delivered to the user in an email or text message, <span style="color: pink;">pretending to be from a trusted source</span>. These attacks can lead to disastrous results for the victim, such as loss of bank funds, or unauthorised purchases. In most cases, the victim of a phishing attack suffers from a financial loss.</p>
     </div>
     <div class ="header2">
         <h2 style="font-size: 28px; margin-left: 20px;">Most Common Types Of Phishing:</h2>
     </div>
     <div class="text">
         <ul style="font-size: 22px; margin-left: 10px;">
-            <li><b>Email scams</b> - the most common type of phishing attack. Attackers send emails, impersonating a trusted brand and entice the victim into clicking the malicious link.</li>
+            <li><b>Email scams</b> - <span style="color: pink;">the most common type of phishing attack</span>. Attackers send emails, impersonating a trusted brand and entice the victim into clicking the malicious link.</li>
             <br><li><b>Spear phishing</b> - similar to email scams, however the attacker does research on the company they wish to attack, so they can use real names of other individuals within the company to make the victim believe the email is from another individual within the business. </li>
             <br><li><b>Vishing</b> - voice phishing. The attacker calls the victim's phone and urges them to take immediate action on something, which may involve handing over bank card details.</li>
             <br><li><b>Whaling</b> - an attack where individuals of high importance, such as business CEOs are specifcally targetted in order to steal sensitive information about the business.</li>
