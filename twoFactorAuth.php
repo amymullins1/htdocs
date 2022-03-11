@@ -58,7 +58,7 @@ if(isset($_SESSION['validUser'])){
             }
         }
     }
-    }
+    
     
 
 
@@ -119,5 +119,9 @@ if(isset($_SESSION['validUser'])){
 	</body>
 </html>
 <?php
-
-//}
+}else{
+    ?>
+    <script>alert("Permission denied.");</script>
+    <?php
+}
+?>

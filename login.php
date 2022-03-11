@@ -77,7 +77,7 @@ if($stmt = $con->prepare('SELECT UserId, Pwd, Email FROM accounts WHERE Username
             Please DO NOT share this code with anyone.</p><br>
             <p>The TechKNOW Team</p>';    
             $mail->send();
-            Header('Location: auth.php');
+            Header('Location: twoFactorAuth.php');
 
             
         } else {

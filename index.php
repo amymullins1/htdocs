@@ -1,5 +1,9 @@
 <?php
 session_start();
+if(isset($_SESSION['validUser']) && !isset($_SESSION['loggedIn'])){
+    session_unset();
+    session_destroy();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
