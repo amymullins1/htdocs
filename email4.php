@@ -18,10 +18,9 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
     $stmt->store_result();
     $stmt->bind_result($uid, $email);
     $stmt->fetch();
-    
-    
-      $randNum =  mt_rand(10000000,99999999);
-      $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
+    $randNum =  mt_rand(10000000,99999999);
+    $randNum .= $uid;
+    $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
 
         $mail->SMTPDebug=2; 
         $mail->isSMTP(); // Sets the mailer to use SMTP

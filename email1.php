@@ -18,9 +18,7 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
     
     $result = $stmt->get_result();
     while($row = $result->fetch_assoc()) {
-      $randNum =  mt_rand(10000000,99999999);
-      $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
-
+      
         $mail->SMTPDebug=2; // Enable verbose debug output
         $mail->isSMTP(); // Set mailer to use SMTP
         $mail->Host='smtp-mail.outlook.com';
@@ -30,8 +28,13 @@ if($stmt = $con->prepare('SELECT accounts.UserId, accounts.Email FROM emailTrack
         // SMTP password
         $mail->SMTPSecure='TLS';
         $mail->Port=587;
+
         $uid = $row['UserId'];
-       $email = $row['Email'];
+        $email = $row['Email'];
+        $randNum =  mt_rand(10000000,99999999);
+        $randNum .= $uid;
+        $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
+
        try {
         //settings
     

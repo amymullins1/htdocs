@@ -21,7 +21,6 @@ if ( mysqli_connect_errno() ) {
 if(isset($_POST['submit'])){ //if the login button is clicked
             $email = $_POST['email'];
             $randNum =  mt_rand(10000000,99999999);
-            $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
             $datetime = date("Y-m-d H:i:s");
 
             $stmt=$con->prepare('Select UserId from accounts where email = ?');
@@ -35,6 +34,8 @@ if(isset($_POST['submit'])){ //if the login button is clicked
             $stmt->bind_param('s', $uid);
             $stmt->execute();
             
+            $randNum .= $uid;
+            $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
             $stmt=$con->prepare('Insert into auth(UserId, AuthCode, DateTime) Values(?, ?, ?)');
             $stmt->bind_param('sss', $uid, $hashedRandNum, $datetime);
             $stmt->execute();
@@ -45,6 +46,7 @@ if($stmt = $con->prepare('SELECT Fname FROM accounts WHERE Email = ?')) {
     $stmt->store_result();
     $stmt->bind_result($name);
     $stmt->fetch();
+    
 	if($stmt->num_rows>0){
         $mail->SMTPDebug=2; // Enable verbose debug output
         $mail->isSMTP(); // Set mailer to use SMTP
