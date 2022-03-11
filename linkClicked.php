@@ -22,7 +22,6 @@ $stmt->execute();
 $results = $stmt->get_result();
 $count = 0;
 while($rowData = $results->fetch_assoc()){
-    echo($rowData['AuthCode']);
     if(password_verify($id, $rowData['AuthCode'])){
         $uid = $rowData['UserId'];
         $count +=1;
