@@ -52,6 +52,7 @@ if(isset($_POST['submit'])){ //if the login button is clicked
 	<head>
 		<meta charset="utf-8">
 		<title>TechKnow | Forgot Password</title>
+        <link rel="icon" type="image/x-icon" href="/Logo/icon.png">
     </head>
     <header class="mainHeader" style="margin: 0px;">
         <nav>

@@ -47,6 +47,7 @@ if($count==1){
 <!DOCTYPE html>
 <html style="background-color: #edf2f3; margin:0px;"> 
 <head><meta charset="utf-8"><title>Phishing Email!</title></head>
+<link rel="icon" type="image/x-icon" href="/Logo/icon.png">
 <header class="mainHeader" style="margin: 0px;">
         <nav>
             <ul>

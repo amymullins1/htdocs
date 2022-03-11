@@ -71,6 +71,7 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
 	<head>
 		<meta charset="utf-8">
 		<title>TechKnow | Sign Up</title>
+        <link rel="icon" type="image/x-icon" href="/Logo/icon.png">
 		
     </head>
     <header class="mainHeader" style="margin: 0px;">

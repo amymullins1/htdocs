@@ -32,6 +32,7 @@ session_start();
 <head>
     <meta charset="UTF-8"/>
     <title>TechKnow | Home</title>
+    <link rel="icon" type="image/x-icon" href="/Logo/icon.png">
     <link rel="stylesheet" href="homepage.css"/>
 </head>
 <body>

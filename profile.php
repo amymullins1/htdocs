@@ -161,6 +161,7 @@ if(isset($_POST['endSim'])){
     <head>
     <meta charset="UTF-8"/>
     <title>TechKnow | Profile</title>
+    <link rel="icon" type="image/x-icon" href="/Logo/icon.png">
     </head>
 <body>
     <header class="bannerHeader">

@@ -7,7 +7,7 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <title>TechKnow | About</title>
-   
+    <link rel="icon" type="image/x-icon" href="/Logo/icon.png">
 </head>
 <body>
 <header class="bannerHeader">

@@ -100,6 +100,7 @@ if($stmt = $con->prepare('SELECT UserId, Pwd, Email FROM accounts WHERE Username
 	<head>
 		<meta charset="utf-8">
 		<title>TechKnow | Login</title>
+        <link rel="icon" type="image/x-icon" href="/Logo/icon.png">
     </head>
     <header class="mainHeader" style="margin: 0px;">
         <nav>
