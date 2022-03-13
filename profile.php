@@ -451,7 +451,7 @@ if($emailNum ==6){
     input[name="endSim"]:hover{
         filter: brightness(90%);
     }</style>
-    <form onSubmit='return confirm("Are you sure you would like to end simulation? \nYour score will be saved.")' action='' method='post'><input type="submit" value="End Simulation and Save?" name="endSim"></form>
+    <br><form onSubmit='return confirm("Are you sure you would like to end simulation? \nYour score will be saved.")' action='' method='post'><input type="submit" value="End Simulation and Save?" name="endSim"></form>
 <?php
    
 }
