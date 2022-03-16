@@ -1,84 +1,102 @@
 <?php
+//includes the SMTP.php, PHPMailer.php and Exception.php files for email sending
 require('SMTP.php');
 require('PHPMailer.php');
 require('Exception.php');
 use \PHPMailer\PHPMailer\PHPMailer;
 use \PHPMailer\PHPMailer\Exception;
+
+//so that if the user has entered an invalid email, they are not constantly shown an error message
 unset($_SESSION['error']);
-include('config.php');
+
+include('config.php'); //for database connections
+//defining the database connection parameters.
 $DATABASE_HOST = 'localhost';
-$DATABASE_USER = 'root';
-$DATABASE_PASS = '';
+$DATABASE_USER = 'projectUser';
+$DATABASE_PASS = '5Iix/r1PyO7sixqf';
 $DATABASE_NAME = 'myProject';
+
+//defines the database connection
 $mail=new PHPMailer(true);
 
-// Try and connect using the information above.
+//defines the database connection
 $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 if ( mysqli_connect_errno() ) {
 	// If there is an error with the connection, stop the script and display the error.
 	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
 if(isset($_POST['submit'])){ //if the login button is clicked
-            $email = $_POST['email'];
-            $randNum =  mt_rand(10000000,99999999);
-            $datetime = date("Y-m-d H:i:s");
+            
+            $email = $_POST['email']; //store the user's input
+            $randNum =  mt_rand(10000000,99999999); //generate a random 8 digit number
+            $datetime = date("Y-m-d H:i:s"); //get today's date and time
 
-            $stmt=$con->prepare('Select UserId from accounts where email = ?');
+            //selects the accounts records that have a matching email to the email address inputted
+            $stmt=$con->prepare('Select UserId from accounts where email = ?'); 
             $stmt->bind_param('s', $email);
             $stmt->execute();
-            $stmt->store_result();
-            $stmt->bind_result($uid);
-            $stmt->fetch(); 
+            $stmt->store_result(); //stores the results of the query
+            $stmt->bind_result($uid); //stores the userid obtained from the results of the query
+            $stmt->fetch();//stores the userid obtained from the results of the query 
 
-            $stmt=$con->prepare('Delete from auth where UserId = ?');
+            //deletes any authentication records, relating to the user id obtained, that may be stored in auth
+            $stmt=$con->prepare('Delete from auth where UserId = ?');  
             $stmt->bind_param('s', $uid);
             $stmt->execute();
             
-            $randNum .= $uid;
-            $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT);
+            $randNum .= $uid; //appends the userid to the end of the 8 digit number to make the number unique
+            $hashedRandNum = password_hash($randNum, PASSWORD_BCRYPT); //hashes the unique number
+
+            //stores the unique number and the user's id in the auth table for authentication purposes
             $stmt=$con->prepare('Insert into auth(UserId, AuthCode, DateTime) Values(?, ?, ?)');
             $stmt->bind_param('sss', $uid, $hashedRandNum, $datetime);
             $stmt->execute();
 
+//gets the user's first name where the email in the record matches the user input
 if($stmt = $con->prepare('SELECT Fname FROM accounts WHERE Email = ?')) {
 	$stmt->bind_param('s', $email);
     $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($name);
-    $stmt->fetch();
+    $stmt->store_result(); //stores the results of the query
+    $stmt->bind_result($name); 
+    $stmt->fetch(); //stores the first name obtained in the name variable
     
-	if($stmt->num_rows>0){
-        $mail->SMTPDebug=2; // Enable verbose debug output
+    //if the query returns rows, the email is valid, so send an email to that email address
+	if($stmt->num_rows>0){ 
+
         $mail->isSMTP(); // Set mailer to use SMTP
-        $mail->Host='smtp-mail.outlook.com';
+        $mail->Host='smtp-mail.outlook.com'; //sets the mail host to smtp outlook
         $mail->SMTPAuth= True; // Enable SMTP authentication
-        $mail->Password='HelloWorld1';
+        $mail->Password='HelloWorld1'; //smtp password
         $mail->Username='amyloumullins1414@hotmail.com'; // SMTP username
-        // SMTP password
-        $mail->SMTPSecure='TLS';
-        $mail->Port=587;
+        $mail->SMTPSecure='TLS'; //sets the secure TLS connection
+        $mail->Port=587; //sets the port number to use
          
-        $mail->setFrom('amyloumullins1414@hotmail.com', 'TechKNOW');
+        //set sender details
+        $mail->setFrom('amyloumullins1414@hotmail.com', 'TechKNOW'); 
     
-        //recipient
-        $mail->addAddress($email);   
+        //set recipient details
+        $mail->addAddress($email); 
+
         $mail->isHTML(true); // Set email format to HTML
-        $mail->Subject='Password Reset';
+        $mail->Subject='Password Reset'; //set email subject
       
+        //set email body using HTML
         $mail->Body='<p>Dear '.$name.', </p><br><p>Please click the link below to reset your password: </p><br>
         <a href="http://localhost/resetPass.php?id='.$randNum.'">Reset Password</a><br>
         <p>The TechKNOW Team</p>';
              
-        $mail->send();
-        Header('Location: login.php');
-    }else{
+        $mail->send(); //send the email.
+        Header('Location: login.php'); //relocate the user to the login page
+    }
+    //else the email does not exist so display an error message informing the user this
+    else{
         $_SESSION['error'] = "Email does not exist!";
     
 	
 }}}
 
 ?>
-
+<!--HTML code for page layout-->
 <link rel="stylesheet" href="login.css">
 <link rel="stylesheet" href="homepage.css">
 <!DOCTYPE html>
@@ -121,6 +139,7 @@ if($stmt = $con->prepare('SELECT Fname FROM accounts WHERE Email = ?')) {
                 <input class="submit" type="submit" value="Submit" name='submit'>
                 </form>
                 <?php
+                //if the error session variable is set, the email does not exist so display an error message.
                     if(isset($_SESSION['error'])){
                         $error = $_SESSION["error"];
                         ?>
@@ -136,5 +155,6 @@ if($stmt = $con->prepare('SELECT Fname FROM accounts WHERE Email = ?')) {
 	</body>
 </html>
 <?php
+    //unset the error session variable
     unset($_SESSION["error"]);
 ?>

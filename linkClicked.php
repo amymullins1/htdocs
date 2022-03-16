@@ -1,14 +1,15 @@
 <?php
 include('config.php');
-// Change this to your connection info.
 $DATABASE_HOST = 'localhost';
 $DATABASE_USER = 'projectUser';
 $DATABASE_PASS = '5Iix/r1PyO7sixqf';
 $DATABASE_NAME = 'myProject';
 
+//gets the id and emailid values stored in the URL
 $id = $_GET['id'];
 $emailID = $_GET['emailId'];
 
+//defines the database connection
 $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 if ( mysqli_connect_errno() ) {
 	// If there is an error with the connection, stop the script and display the error.
@@ -27,9 +28,8 @@ while($rowData = $results->fetch_assoc()){
         $count +=1;
     }
 }
-//gets the email address and email ID from the url and stores in variables
 
-if($count==1){
+if($count==1){ //if count equals 1, the authentication code is valid, so update the user's score and the corresponding results record.
         if($stmt = $con->prepare('UPDATE results set HasClicked = 1 where UserId = ? and EmailNum = ?')){
             //updates the results record for the corresponding email and user
             $stmt->bind_param('ss', $uid, $emailID); 
@@ -44,6 +44,7 @@ if($count==1){
 ?>
 <link rel="stylesheet" href="homepage.css">
 <!DOCTYPE html>
+<!--content of the linkClicked page -->
 <html style="background-color: #edf2f3; margin:0px;"> 
 <head><meta charset="utf-8"><title>Phishing Email!</title></head>
 <link rel="icon" type="image/x-icon" href="/Logo/icon.png">
@@ -72,6 +73,7 @@ if($count==1){
 </html>
 
 <?php }else{
+    //else the authentication code is invalid so display an alert message informing the user they have failed authentication.
     ?>
     <script>alert("FAILED AUTH");</script>
     <?php

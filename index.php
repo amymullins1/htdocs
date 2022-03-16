@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); //start the session or continue it if user is already in a session.
 
 ?>
 <!DOCTYPE html>
@@ -25,11 +25,12 @@ session_start();
             if (secsCounter >= timeOutSecs) {
                 window.clearInterval(timer);
                 alert('Session Timed Out!\n Please Log In');
-                window.location = "logOut.php";
+                window.location = "logOut.php"; //log the user out of their account
             }
         }
     </script>
     <?php }?>
+    <!-- HTML code for page layout-->
 <head>
     <meta charset="UTF-8"/>
     <title>TechKnow | Home</title>
@@ -38,13 +39,16 @@ session_start();
 </head>
 <body>
 <header class="bannerHeader">
+<!--if the user is not logged in, display the login and signup buttons in the nav bar.-->
     <?php if(!isset($_SESSION['loggedin'])){
                         echo '<ul>
                         <a href="login.php">Login</a>
                         <a href="signUp.php">Sign Up</a>
                     </ul>';
                     
-            }else{
+            }
+            //else the user is logged in so display a welcome message with their name, which redirects them to their profile when clicked.
+            else{
                 $name = $_SESSION['fname'];
                 ?>
                 <ul><a href='profile.php'><span class='welcome'>Welcome, <?php echo htmlspecialchars($name);?>!</span></a><a href='logOut.php'>Log Out</a></ul>";           
@@ -56,6 +60,7 @@ session_start();
     <header class="mainHeader">
         <nav>
             <ul>
+            <!--second nav bar -->
             <div id = "menu" class="menu">
                 <div id="logo" class="logoImage"><li><a href="index.php" ><img class="logoImage" src="Logo/horizontalCover.png"></a></li></div>
                 <div class="menuText">
@@ -68,6 +73,7 @@ session_start();
         <hr>
         <h1 class="menuHeader1">Your Phishing Education, Right Away!</h1>
     </header>
+    <!--Homepage text content: -->
     <div id="body" class="body">
     <div class="header1">
         <h1 style="font-size: 28px; margin-left: 20px;">What is Phishing?</h1>

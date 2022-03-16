@@ -2,8 +2,8 @@
 unset($_SESSION['error']);
 include('config.php');
 $DATABASE_HOST = 'localhost';
-$DATABASE_USER = 'root';
-$DATABASE_PASS = '';
+$DATABASE_USER = 'projectUser';
+$DATABASE_PASS = '5Iix/r1PyO7sixqf';
 $DATABASE_NAME = 'myProject';
 
 $id = $_GET['id'];

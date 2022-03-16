@@ -1,22 +1,31 @@
 <?php
+//starts a new session or resumes the current one.
 session_start();
 ?>
+<!--start of the html code-->
  <link rel="stylesheet" href="homepage.css"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!--sets the title in the browser toolbar-->
     <title>TechKnow | About</title>
+    <!--adds an icon to the browser toolbar-->
     <link rel="icon" type="image/x-icon" href="/Logo/icon.png">
 </head>
 <body>
+ <!--defines the top navigation bar-->
 <header class="bannerHeader">
+
+ <!--if the user is not logged in, display the login and signup buttons-->
 <?php if(!isset($_SESSION['loggedin'])){
                         echo '<ul>
                         <a href="login.php">Login</a>
                         <a href="signUp.php">Sign Up</a>
                     </ul>';
-            }else{
+            }
+//else, the user is logged in, so display a welcome button which redirects the user to their profile when clicked.
+            else{
                 $name = $_SESSION['fname'];
                 ?>
                 <ul><a class='Welcome' href="profile.php">Welcome, <?php echo htmlspecialchars($name); ?>!</span><a href='logOut.php'>Log Out</a></ul>";
@@ -24,12 +33,15 @@ session_start();
             }
     ?>
 </header>
+<!--defines the second navigation bar-->
 <header class="mainHeader">
     <nav>
         <ul>
             <div id = "menu" class="menu">
+<!--displays the logo in the navigation bar which redirects the user to the homepage when clicked-->
                 <div id="logo" class="logoImage"><li><a href="index.php" ><img class="logoImage" src="Logo/horizontalCover.png"></a></li></div>
                 <div class="menuText">
+<!--displays the home and about buttons which redirects the user to the appropriate pages when clicked-->
                     <li><a href="index.php">HOME</a></li>
                     <li><a href="about.php">ABOUT</a></li>
                 </div>
@@ -37,9 +49,11 @@ session_start();
         </ul>
     </nav>
     <hr>
+<!--defines the header-->
     <h1 class="menuHeader1">Your Phishing Education, Right Away!</h1>
 </header>
 <div id="body" class="body">
+<!--outputs the text to be displayed in this page.-->
 <div class="header"><h2 style="color: white; font-size: 28px; margin-left: 20px;">What We Do </h2></div>
 <div class = "text">
 <p style="font-size: 24px; margin-left: 8%; color: pink;"><b>YOUR BIGGEST RISK IS YOUR EMAIL!</b></p>

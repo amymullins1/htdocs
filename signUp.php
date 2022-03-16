@@ -5,8 +5,8 @@ unset($_SESSION["error"]);
 if(isset($_POST['submit'])){
 // Change this to your connection info.
 $DATABASE_HOST = 'localhost';
-$DATABASE_USER = 'root';
-$DATABASE_PASS = '';
+$DATABASE_USER = 'projectUser';
+$DATABASE_PASS = '5Iix/r1PyO7sixqf';
 $DATABASE_NAME = 'myProject';
 // Try and connect using the info above.
 $hashedPassword = password_hash($_POST['password'], PASSWORD_BCRYPT);
