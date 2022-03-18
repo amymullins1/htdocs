@@ -1,19 +1,23 @@
 <?php 
 session_start();
 include('config.php');
+
+//database parameters defined
 $DATABASE_HOST = 'localhost';
 $DATABASE_USER = 'projectUser';
 $DATABASE_PASS = '5Iix/r1PyO7sixqf';
 $DATABASE_NAME = 'myProject';
-// Try and connect using the information above.
+// Connect using the parameters above.
 $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 if ( mysqli_connect_errno() ) {
-	// If there is an error with the connection, stop the script and display the error.
 	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
+//if the user has completed login validation successfully, display the two-factor authentication page.
+//This stops people from being able to skip the login page
 if(isset($_SESSION['validUser'])){
-    if(isset($_POST['authBtn'])){
+    if(isset($_POST['authBtn'])){ //if the authenticate button is clicked, do the following
 
+        //checks if the authentication code entered matches the authentication code stored in the user's auth record.
         $stmt=$con->prepare('Select AuthCode from auth where UserId = ?');
         $stmt->bind_param('s', $_SESSION['uid']);
         $stmt->execute();
@@ -22,16 +26,20 @@ if(isset($_SESSION['validUser'])){
         $stmt->fetch();
        
         if(password_verify($_POST['auth'], $authcode)){
+            //if the authentication code entered is valid, log the user into their profile.
             $stmt=$con->prepare('Select UserId, Fname, Lname, Email, DOB from accounts where UserId = ?');
             $stmt->bind_param('s', $_SESSION['uid']);
             $stmt->execute();
             $stmt->store_result();
-            $stmt->bind_result($uid, $fname, $lname, $email, $dob);
+            $stmt->bind_result($uid, $fname, $lname, $email, $dob); //gets the user's account details
             $stmt->fetch();
-            $stmt=$con->prepare('Update accounts set lastActive = ? where UserId = ?');
+            $stmt=$con->prepare('Update accounts set lastActive = ? where UserId = ?'); //updates the lastActive field of the account record.
+            //This is to ensure the account does not get deleted by the inactiveAccount script.
             $stmt->bind_param('ss', date("d-m-y"), $uid);
             $stmt->execute();
 
+            //regenerate the session ID and store the users details in session variables. 
+            //Set the logged in session variable to true.
             session_regenerate_id();
             $_SESSION['uid'] = $uid;
             $_SESSION['uname']= $uname;
@@ -41,17 +49,19 @@ if(isset($_SESSION['validUser'])){
             $_SESSION['dob'] = $dob;
             $_SESSION['id'] = $id;
             $_SESSION['loggedin'] = TRUE;
+            //delete the authentication code that has just been used since it is no longer needed.
             $stmt=$con->prepare('Delete from auth where userid = ?');
             $stmt->bind_param('s', $uid);
             $stmt->execute();
 
-            Header('Location: profile.php');
-        }else{
-            $_SESSION['authCount'] ++;
-            if($_SESSION['authCount'] == 3){
-                session_destroy();
-                Header('Location: index.php');
-            }else{
+            Header('Location: profile.php'); //redirect the user to their profile.
+        }else{ //else, the code the user has entered is invalid
+            $_SESSION['authCount'] ++; 
+            if($_SESSION['authCount'] == 3){ //the user has reached the code input limit
+                session_destroy(); //destroy the session so the user is not authenticated.
+                Header('Location: index.php'); //redirect to the homepage
+                
+            }else{ //the limit has not been reached so display an invalid authentication code alert message.
                 ?><script>
             alert('Incorrect authentication code! \n'+(3-<?php echo $_SESSION['authCount']?>)+' attempts left.');
             </script> <?php

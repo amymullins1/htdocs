@@ -1,6 +1,6 @@
 <?php
 session_start();
-//session timeout after x minutes
+//session timeout after 30 minutes
 if((isset($_SESSION['inactive']))&& (time() - $_SESSION['inactive'] > 1800)) {
     session_unset(); 
     session_destroy(); 
@@ -10,10 +10,13 @@ $uid = $_SESSION['uid'];
 if(!isset($_SESSION['loggedin'])){
     Header('Location: index.php');
 }
+
+//defining database connection parameters
 $DATABASE_HOST = 'localhost';
 $DATABASE_USER = 'projectUser';
 $DATABASE_PASS = '5Iix/r1PyO7sixqf';
 $DATABASE_NAME = 'myProject';
+//create the database connection
 $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 if ( mysqli_connect_errno() ) {
 	// If there is an error with the connection, stop the script and display the error.
@@ -96,6 +99,14 @@ if(isset($_POST['deleteAccount'])){
     $stmt->bind_param('s', $uid);
     $stmt->execute();
 
+    $stmt= $con->prepare('Delete from auth where UserId = ?');
+    $stmt->bind_param('s', $uid);
+    $stmt->execute();
+
+    $stmt= $con->prepare('Delete from pastScores where UserId = ?');
+    $stmt->bind_param('s', $uid);
+    $stmt->execute();
+
     $stmt = $con->prepare('Delete from accounts where UserId = ?');
     $stmt->bind_param('s', $uid);
     $stmt->execute();
@@ -104,6 +115,8 @@ if(isset($_POST['deleteAccount'])){
     session_destroy(); //destroys all session cookies (logs them out of their account)
     Header('Location: index.php'); //Redirects the user back to the homepage
 }
+//if the user clicks the End Simuation button, delete all records corresponding to that simulation
+//and store their score in the pastScores table.
 if(isset($_POST['endSim'])){
     $stmt=$con->prepare('Select Score from emailTrack where UserId = ?');
     $stmt->bind_param('s', $uid);
@@ -113,7 +126,7 @@ if(isset($_POST['endSim'])){
     $stmt->fetch();
 
     $stmt=$con->prepare("Insert into pastScores(UserId, Score, SavedDate) Values(?, ?, ?);");
-    $date= date("d.m.y");
+    $date= date("d.m.y"); //stores today's date so the user can distinguish previous scores.
     $stmt->bind_param('sss', $uid, $score, $date);
     $stmt->execute();
     
@@ -121,7 +134,9 @@ if(isset($_POST['endSim'])){
     $stmt->bind_param('i', $uid);
     $stmt->execute();
 
-    $stmt=$con->prepare('update emailTrack set Next_email_num = 0, Score=5');
+//sets the next_email_num back to 0 so the user can restart the simulation whenever they like.
+    $stmt=$con->prepare('update emailTrack set Next_email_num = 0, Score=5 where UserId = ?;');
+    $stmt->bind_param('i', $uid);
     $stmt->execute();
 }
 ?>
@@ -135,6 +150,7 @@ if(isset($_POST['endSim'])){
            height: 100%;
         }
         </style>
+        <!-- JavaScript session timeout-->
         <script type="text/javascript">
         var secsCounter = 0;
         var timer = null;
@@ -192,7 +208,7 @@ if(isset($_POST['endSim'])){
 <style>
     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;800&family=Source+Sans+Pro:wght@300;400;600&display=swap');
 
-   
+ /*Styling of the tab buttons */
   .tab {
     float: left;
     background-color: #edf2f3;
@@ -200,7 +216,6 @@ if(isset($_POST['endSim'])){
     height: 85%;
   }
   
-   /*Styling of the tab buttons */
   .tab button {
     display: block;
     background-color: inherit;
@@ -257,6 +272,7 @@ if(isset($_POST['endSim'])){
   <button class="tabClass" onclick="tabEvent(event, 'Profile')" id="defaultTab">Account</button>
   <button class="tabClass" onclick="tabEvent(event, 'Edit')">Edit Account</button>
   <?php
+  //if the user has pastScores records, display the Your Scores tab.
    $stmt=$con->prepare('Select * from pastScores where UserId = ?;');
    $stmt->bind_param('s', $uid);
    $stmt->execute();
@@ -267,9 +283,11 @@ if(isset($_POST['endSim'])){
    }
  
   ?>
+  <!--Always display the 'Simulation' tab-->
   <button class="tabClass" onclick="tabEvent(event, 'Simulation')">Simulation</button>
  
  <?php
+ //if the user has reached the end of simulation, display the Feedback tab.
   $stmt = $con->prepare('SELECT Next_email_num from emailTrack WHERE UserId = ?'); //gets the next email number of the current user
   $stmt->bind_param('i', $uid);
   $stmt->execute();
@@ -285,7 +303,9 @@ if(isset($_POST['endSim'])){
 
 </div>
 
+<!--Contents of the profile tab -->
 <div id="Profile" class="insideTab">
+<!--styling for the contents of the profile tab. -->
     <style>
         .detailsText{
             color: white;
@@ -300,6 +320,7 @@ if(isset($_POST['endSim'])){
         </style>
        <br>
     <?php
+    //get the user's account details and store in variables.
     $stmt=$con->prepare('SELECT Username, Fname, Lname, Email, DOB FROM accounts where UserId = ?');
     $stmt->bind_param('s', $uid);
     $stmt->execute();
@@ -307,6 +328,7 @@ if(isset($_POST['endSim'])){
     $stmt->bind_result($uname, $fname, $lname, $email, $dob);
         $stmt->fetch();
     ?>
+    <!--Output the account details in the contents of the profile tab. -->
     <span class='detailsText'>Name:</span>
     <span class='fieldText'><?php echo htmlspecialchars($fname)." ".htmlspecialchars($lname);?></span><br>
     <br><span class='detailsText'>Username:</span>
@@ -319,9 +341,10 @@ if(isset($_POST['endSim'])){
     
     
 </div>
-
+<!--Contents of the edit details tab -->
 <div id="Edit" class="insideTab"> <!--This is the tab for editing details-->
     <h3>Edit your personal details below:</h3>
+    <!--styling for contents of edit details tab-->
     <style>input[name="editSubmit"]{
         background-color: #7DCC8C;
                     font-family: 'IBM Plex Mono', monospace;
@@ -338,6 +361,7 @@ if(isset($_POST['endSim'])){
     input[name="editSubmit"]:hover{
         filter: brightness(90%);
     }</style>
+    <!--Edit details form creation -->
 <form onSubmit= "return confirm('Are you sure you would like to make these changes?')" action="" method="post"> <!--Confirm() checks the user wants to proceed before submitting the form -->
                 <span style="margin-left: 3%; font-size: 22px;">Username: </span>
                 <input style="border-radius: 12px; border: 2px solid #7DCC8C; font-family: 'IBM Plex Mono', monospace;
@@ -354,6 +378,7 @@ if(isset($_POST['endSim'])){
                 <input type="submit" value="Save Changes" name="editSubmit">
 </form>
 <style>
+/*More styling for the contents of the edit details tab */
     input[name='deleteAccount']{
     background-color: red; 
                 padding: 8px; 
@@ -370,11 +395,13 @@ if(isset($_POST['endSim'])){
        filter: brightness(90%);
     }
 </style>
+<!--Form for the delete account button -->
 <form onSubmit= "return confirm('Are you sure you want to permanently delete your account and all data associated with it?')" action="" method="post">
     <input name="deleteAccount" type="submit" value="Delete Account">
     </div>
     </form>
-    
+
+<!--Contents of the Simulation tab-->
 <div id="Simulation" class="insideTab">
 
 <style>
@@ -385,6 +412,7 @@ if(isset($_POST['endSim'])){
 }
     </style>
 <?php 
+//gets the user's next_email_num value and their current score.
 $stmt = $con->prepare('SELECT Next_email_num, Score from emailTrack WHERE UserId = ?');
 $stmt->bind_param('i', $uid);
 $stmt->execute();
@@ -392,17 +420,20 @@ $stmt->store_result();
 $stmt->bind_result($emailNum, $score);
 $stmt->fetch();
 
+//If the next_email_num value equals 6, the user has finished simulation
 if($emailNum ==6){
     ?>
-    <h2 style="text-align: center;">Simulation finished!</h2>
-    <h3>Results:</h3>
+    <h2 style="text-align: center;">Simulation finished!</h2> <!--Outputs a message informing the user they have finished simulation -->
+    <h3>Results:</h3> <!--Display their score -->
     <p>You scored: <?php echo htmlspecialchars($score);?>/5!</p>
     <?php
+    //get all of the records from results, where the user clicked the link in the email.
     $stmt=$con->prepare('SELECT EmailNum from results where UserId = ? and HasClicked = 1;');
     $stmt->bind_param('i', $uid);
     $stmt->execute();
     $results = $stmt->get_result();
-    if($results->num_rows!=0){
+    if($results->num_rows!=0){ //if the user has clicked on a link in at least one email, do the following
+        //Loops through each result and display a bullet pointed list of all of the emails the user clicked on.
       echo "<p>You clicked the link in the following simulation emails:</p>";
     while($rowData = $results->fetch_assoc()){
         if($rowData['EmailNum']==1){
@@ -427,13 +458,14 @@ if($emailNum ==6){
             <?php
         }
     }
-}else{
+}else{//else, they did not click any links, so tell them they have a perfect score.
     ?>
     <p>Well done you have a perfect score!</p>
     <?php
 }
 ?>
     <style> 
+    /*End simulation button styling*/
     input[name="endSim"]{
         background-color: #7DCC8C;
                     font-family: 'IBM Plex Mono', monospace;
@@ -451,10 +483,12 @@ if($emailNum ==6){
     input[name="endSim"]:hover{
         filter: brightness(90%);
     }</style>
+    <!--Display the end simulation button-->
     <br><form onSubmit='return confirm("Are you sure you would like to end simulation? \nYour score will be saved.")' action='' method='post'><input type="submit" value="End Simulation and Save?" name="endSim"></form>
 <?php
    
 }
+//if the next_email_num value equals 0, the user has not started simulation yet.
 elseif($emailNum == 0){
     ?>
     <br><h3 style="text-align: center;">You have not begun your Simulation yet! <br>Start now?<h3>
@@ -477,11 +511,12 @@ elseif($emailNum == 0){
                 filter: brightness(90%);
             }
         </style>
+        <!--Display the start simulation button-->
     <form action='' method='post'><input type='submit' value='Start!' name='start'></form>
     <?php
     
 }
-else{
+else{//else, the user has not started simulation yet so display a simulation in progress message.
    
     echo "<p style='font-size: 30px;'><b>Simulation in progress...<b></p><br>";
     echo "<span>You will be able to view your score and feedback at the end of simulation. </span>";
@@ -490,19 +525,22 @@ else{
 
 ?>
 </div>
+<!--Contents of the feedback tab-->
 
 <div id = "Feedback" class = "insideTab">
     <h3>Based on your performance, here are some detection methods you should use to help identify a phishing email you may receive in the future:</h3>
     <?php
+//get the email numbers of all of the email links the user clicked.
 $stmt=$con->prepare('SELECT EmailNum from results where UserId = ? and HasClicked = 1;');
     $stmt->bind_param('i', $uid);
     $stmt->execute();
     $results = $stmt->get_result();
     if($results->num_rows!=0){
         $feedbackCount = 0;
-    while($rowData = $results->fetch_assoc()){
+    while($rowData = $results->fetch_assoc()){ //loop through every record the query returns
+        //output the feedback depending on which email number is in the record.
         if($rowData['EmailNum']==1){
-            if($feedbackCount == 0){
+            if($feedbackCount == 0){ //makes sure the same message is not outputted twice
                 ?>
                 <span style="margin-left: 30px; font-size: 22px; font-weight: bolder;">Examine the email for spelling and grammar mistakes</span>
             <br> <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px;">There are multiple reasons as to why scammers use poor spelling and grammar in their phishing emails. One reason may be that the scammer sending the phishing email is not a native English speaker. However, the most common reason is that poor spelling and grammar is used as a tactic by attackers to dodge spam filters and sieve out all the users clever enough to notice the mistakes in the email. Vulnerable users who do not notice the mistakes are more likely to interact with the email and will be gullible enough to hand over sensitive information. </span><br><br>
@@ -572,22 +610,25 @@ $stmt=$con->prepare('SELECT EmailNum from results where UserId = ? and HasClicke
 }
 ?>
 </div>
+<!--Contents of the Your Scores tab-->
 <div id="Scores" class="insideTab">
     <h3>Your Past Simulation Scores:</h3>
+    <!--table header-->
     <table style="background-color: #edf2f3; text-align: center; border: 2px solid white; width: 25%; height: 20%;"><tr style="font-size: 20px;">
         <th style="border: 2px solid white; background-color: rgba(65, 135, 148, .5);">Score</th>
         <th style="border: 2px solid white; background-color: rgba(65, 135, 148, .5);">Date</th>
 </tr>
 <?php
+//get all the records in pastScores with the user's userid.
     $stmt=$con->prepare('Select Score, SavedDate from pastScores where UserId = ?');
     $stmt->bind_param('s', $uid);
     $stmt->execute();
     $results = $stmt->get_result();
-    while($rowData = $results->fetch_assoc()){
+    while($rowData = $results->fetch_assoc()){ //loop through the records and output the score and date saved into the table.
         ?>
         <tr>
         <td style='border: 2px solid white; background-color: rgba(65, 135, 148, .5); '><?php echo htmlspecialchars($rowData['Score']); ?>/5</td>
-        <td style='border: 2px solid white; background-color: rgba(65, 135, 148, .5);'><?php echo htmlspecialchars($rowData['SavedDate']); ?>/5</td>
+        <td style='border: 2px solid white; background-color: rgba(65, 135, 148, .5);'><?php echo htmlspecialchars($rowData['SavedDate']); ?></td>
         </tr>
     
     <?php
@@ -616,7 +657,7 @@ function tabEvent(evt, eventName) {
 }
 
 // Gets the tab with the ID "defaultTab" and opens this tab everytime the page is loaded
-document.getElementById("defaultTab").click();
+document.getElementById("defaultTab").click(); 
 </script> 
     </body>
     </html>

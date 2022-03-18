@@ -2,38 +2,46 @@
 session_start();
 include('config.php');
 unset($_SESSION["error"]);
-if(isset($_POST['submit'])){
-// Change this to your connection info.
+if(isset($_POST['submit'])){ //if the submit button has been pressed
+// Define the database connection parameters.
 $DATABASE_HOST = 'localhost';
 $DATABASE_USER = 'projectUser';
 $DATABASE_PASS = '5Iix/r1PyO7sixqf';
 $DATABASE_NAME = 'myProject';
-// Try and connect using the info above.
+// Try and connect using the database parameters defined above.
 $hashedPassword = password_hash($_POST['password'], PASSWORD_BCRYPT);
 $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 if ( mysqli_connect_errno() ) {
-	// If there is an error with the connection, stop the script and display the error.
+	// If there is an error with the connection, display an error
 	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
-$password = $_POST['password'];
+
+
+$password = $_POST['password']; //get the password the user has entered
+//check if the username the user has entered already exists
 if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
     $stmt->bind_param('s', $_POST['username']);
     $stmt->execute();
     $stmt->store_result();
     if($stmt->num_rows>0){
-        $_SESSION['error']="Username already exists!";
+        $_SESSION['error']="Username already exists!"; //set the error session variable.
         
-    }elseif($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Email = ?')){
+    }
+    //check if the email the user has entered already exists
+    elseif($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Email = ?')){
         $stmt->bind_param('s',$_POST['email']);
         $stmt->execute();
         $stmt->store_result();
         if($stmt->num_rows>0){
-            $_SESSION['error']="Email already exists!";
+            $_SESSION['error']="Email already exists!"; //set the error session variable
          
-        }elseif(!preg_match('/^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]{8,60}$/', $password)) {
-            $_SESSION['error']="Password does not match the requirements!";
-       }elseif($stmt = $con->prepare('INSERT INTO accounts(Username, Pwd, Fname, Lname, Email, DOB, lastActive) VALUES (?, ?, ?, ?, ?, ?, ?)')) {
-       
+        }
+        //check the password the user has entered matches the requirements
+        elseif(!preg_match('/^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]{8,60}$/', $password)) {
+            $_SESSION['error']="Password does not match the requirements!"; //set the error session variable.
+       }
+       //if we reach here, the details the user has entered are valid so we can store them.
+       elseif($stmt = $con->prepare('INSERT INTO accounts(Username, Pwd, Fname, Lname, Email, DOB, lastActive) VALUES (?, ?, ?, ?, ?, ?, ?)')) {
         $stmt->bind_param('sssssss', $_POST['username'], $hashedPassword, $_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['dob'], date("d-m-y"));
         $stmt->execute();
         //Get the user id of the account that has just been created, in order to add records to other tables
@@ -52,7 +60,7 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
         $stmt->execute();
         }
         
-         //navigate to the login screen.
+         //navigate to the login screen once the records have been created
          header('Location: login.php');
         }
     }
@@ -63,7 +71,7 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
     $stmt->close();
 }
 ?>
-
+<!--Webpage layout-->
 <link rel="stylesheet" href="signUp.css">
 <link rel="stylesheet" href="homepage.css"/>
 <!DOCTYPE html>
@@ -77,6 +85,7 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
     <header class="mainHeader" style="margin: 0px;">
         <nav>
             <ul>
+            <!--navigation bar-->
             <div id = "menu" class="menu">
                 <div id="logo" class="logoImage"><li><a href="index.php" ><img class="logoImage" src="Logo/horizontalCover.png"></a></li></div>
                 <div class="menuText">
@@ -92,6 +101,7 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
 		<div class="box">
             <h1 class="signUp">Sign Up</h1>
             <p class="text">Fill in this form to create a free account.</p>
+            <!--Creates the input form and outputs it.-->
 			<form class="signUpForm" action="" method="post">
 				<input class="fields" type="text" name="username" placeholder="Username" id="username" required>
                 <input class="fields" type="password" name="password" placeholder="Password" id="password" required>
@@ -110,6 +120,7 @@ if($stmt=$con->prepare('SELECT UserId FROM accounts WHERE Username = ?')){
                 <input class="submit" type="submit" value="Submit" name='submit'>
             </form>
             <?php
+            //if the error session variable is set, display the error message.
                     if(isset($_SESSION['error'])){
                         $error = $_SESSION['error'];
                         echo "<span class='error'>$error</span>";

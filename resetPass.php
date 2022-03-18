@@ -1,34 +1,43 @@
 <?php
 unset($_SESSION['error']);
 include('config.php');
+
+//define the database connection parameters
 $DATABASE_HOST = 'localhost';
 $DATABASE_USER = 'projectUser';
 $DATABASE_PASS = '5Iix/r1PyO7sixqf';
 $DATABASE_NAME = 'myProject';
 
+//get the authentication code from the URL
 $id = $_GET['id'];
-// Try and connect using the information above.
+
+// Try and connect using the parameters defined above.
 $con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
 if ( mysqli_connect_errno() ) {
+
 	// If there is an error with the connection, stop the script and display the error.
 	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
 }
+
 $stmt = $con->prepare('SELECT UserId, AuthCode from auth');
 $stmt->execute();
 $results = $stmt->get_result();
 $count = 0;
+//loop through all authentication codes and check if one matches the id in the URL
 while($rowData = $results->fetch_assoc()){
     if(password_verify($id, $rowData['AuthCode'])){
         $uid = $rowData['UserId'];
         $count +=1;
     }
 }
+//if the URL has a valid authentication code, do the following
 if($count == 1){
 if(isset($_POST['submit'])){ //if the login button is clicked
         
-    if($_POST['password1'] == $_POST['password2']){
+    if($_POST['password1'] == $_POST['password2']){ //if the passwords entered are the same
+        //check the password follows the requirements. If it does, hash the password and update the password in the user's record.
     if(preg_match('/^(?=.*\d)(?=.*[@#\-_$%^&+=§!\?])(?=.*[a-z])(?=.*[A-Z])[0-9A-Za-z@#\-_$%^&+=§!\?]{8,60}$/', $_POST['password1'])) {
-    $hashedPassword = password_hash($_POST['password1'], PASSWORD_BCRYPT);
+    $hashedPassword = password_hash($_POST['password1'], PASSWORD_BCRYPT); 
     $stmt = $con->prepare('Update accounts set Pwd = ? where UserId = ?');
     $stmt->bind_param('ss', $hashedPassword, $uid);
     $stmt->execute();
@@ -36,15 +45,15 @@ if(isset($_POST['submit'])){ //if the login button is clicked
     $stmt->bind_param('s', $uid);
     $stmt->execute();
     $_SESSION['success'] = "Password updated!";
-    }else{
+    }else{ //else the password does not match the requirements
         $_SESSION['error']="Passwords do not match the requirements!";
     }
-    }else{
+    }else{ //else the passwords don't match
         $_SESSION['error'] = "Passwords do not match! <br> Please Try Again.";	
 }
 }
 ?>
-
+<!--webpage layout-->
 <link rel="stylesheet" href="login.css">
 <link rel="stylesheet" href="homepage.css">
 <!DOCTYPE html>
@@ -129,6 +138,7 @@ if(isset($_POST['submit'])){ //if the login button is clicked
                 <input class="submit" type="submit" value="Submit" name='submit'>
                 </form>
                 <?php
+                //outputs success or error message, depending if the passwords have been stored or not.
                     if(isset($_SESSION['error'])){
                         $error = $_SESSION["error"];
                         if($error=="Passwords do not match! <br> Please Try Again."){
@@ -166,9 +176,9 @@ if(isset($_POST['submit'])){ //if the login button is clicked
 <?php
     unset($_SESSION["error"]);
     unset($_SESSION["success"]);
-    }else{
+    }else{ //else the authentication code is invalid so do not display the page
          ?>
-             <script> alert("Invalid auth");</script>
+             <script> alert("Invalid auth");</script> <!--output invalid authentication alert-->
                     <?php
                 }            
 
